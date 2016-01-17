@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">LetsCook</string>
+    <string name="action_settings">Settings</string>
+    <string name="open_drawer">open drawer</string>
+    <string name="close_drawer">close drawer</string>
+    <string name="nav_logout">Logout</string>
+
+    <!-- Fragment tags -->
+    <string name="fragment_add_recipe">FragmentAddRecipe</string>
+    <string name="fragment_recipes">FragmentRecipes</string>
+    <string name="fragment_favourites">FragmentFavourites</string>
+    <string name="fragment_other_chefs">FragmentOtherChefs</string>
+    <string name="fragment_events">FragmentEvents</string>
+    <string name="dialog_add_recipe">DialogFragmentRecipeTitle</string>
+    <string name="dialog_add_ingredient">DialogFragmentAddIngredient</string>
+
+
+    <string name="et_hint_recipe_title">Recipe Title</string>
+    <!--<string name="dialog_add_recipe_title">Add a title for the recipe</string>-->
+
+    <!--<string name="spinner_category">Choose Category</string>-->
+    <string name="spinner_level">Choose Level</string>
+    <string name="spinner_dinner_guest">Number of Guest</string>
+    <string name="spinner_time">Choose Time</string>
+    <string name="spinner_budget">Choose Budget</string>
+
+
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="tv_add_image">Add image</string>
+    <string name="tv_add_ingredients">Ingredient</string>
+    <string name="et_hint_ingredient_name">Ingredient</string>
+    <string name="et_hint_ingredient_amount">Amount</string>
+    <string name="dialog_add">Add</string>
+    <string name="tv_add_ingredients_amount">Amount</string>
+    <string name="menu_camera">Take Picture</string>
+    <string name="fragment_recipe_detail">FragmentRecipeDetail</string>
+    <string name="fragment_nutrients">FragmentNutrients</string>
+
+
+</resources>

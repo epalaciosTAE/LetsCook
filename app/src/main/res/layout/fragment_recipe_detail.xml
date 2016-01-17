@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_recipe_detail"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="200dp"/>
+
+
+    <ImageView
+        android:id="@+id/img_recipe_detail_kcal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_alignTop="@id/img_recipe_detail"
+        android:visibility="invisible"
+        android:src="@drawable/ic_kcal"/>
+    <ImageView
+        android:id="@+id/img_recipe_detail_protein"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_protein"
+        android:layout_below="@id/img_recipe_detail_kcal"/>
+    <ImageView
+        android:id="@+id/img_recipe_detail_carb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_carbs"
+        android:layout_below="@id/img_recipe_detail_protein"/>
+    <ImageView
+        android:id="@+id/img_recipe_detail_fibre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_fiber"
+        android:layout_below="@id/img_recipe_detail_carb"/>
+    <ImageView
+        android:id="@+id/img_recipe_detail_fat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_fat"
+        android:layout_below="@id/img_recipe_detail_fibre"/>
+    <ImageView
+        android:id="@+id/img_recipe_detail_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_balance"
+        android:layout_below="@id/img_recipe_detail_fat"/>
+    <ImageView
+        android:id="@+id/img_recipe_detail_sodium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_sodium"
+        android:layout_below="@id/img_recipe_detail_balance"/>
+
+
+    <TextView
+        android:id="@+id/tv_recipe_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:text="sdfsdsf"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/img_recipe_detail"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"/>
+
+    <include layout="@layout/recycler_view"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+             android:layout_marginTop="5dp"
+             android:layout_marginStart="@dimen/activity_vertical_margin"
+             android:layout_marginEnd="@dimen/activity_horizontal_margin"
+         android:layout_below="@id/tv_recipe_detail_title"
+         android:layout_above="@+id/btn_recipe_detail_nutrients"/>
+
+
+    <Button
+        android:id="@+id/btn_recipe_detail_nutrients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_alignParentBottom="true"
+        android:text="Nutrients"/>
+
+</RelativeLayout>

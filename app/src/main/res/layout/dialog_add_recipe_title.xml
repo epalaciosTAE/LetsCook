@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.TextInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/til_recipe_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/et_recipe_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:hint="@string/et_hint_recipe_title"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Category"/>
+
+        <Spinner
+            android:id="@+id/spinner_recipe_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:spinnerMode="dropdown"
+            android:entries="@array/category_titles"/>
+</android.support.design.widget.TextInputLayout>

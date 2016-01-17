@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:fab="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/header_add_recipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+        <ImageView
+            android:id="@+id/img_add_recipe"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:background="@android:drawable/picture_frame"
+            android:layout_alignParentTop="true"/>
+        <TextView
+            android:id="@+id/tv_recipe_title"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/img_add_recipe"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="sdfsdfsfsdfsdfsd"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/spinners_row_top"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/shape_add_recipe_spinners"
+        android:weightSum="1"
+        android:layout_below="@id/header_add_recipe">
+
+        <Spinner
+            android:id="@+id/spinner_budget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:spinnerMode="dialog"
+            android:entries="@array/recipe_budget"
+            android:prompt="@string/spinner_budget"/>
+        <include
+            layout="@layout/separator"
+            android:id="@+id/separator_top"
+            android:layout_width="2dp"
+            android:layout_height="100dp"
+            android:background="@color/colorPrimaryDark"/>
+        <Spinner
+            android:id="@+id/spinner_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:spinnerMode="dialog"
+            android:entries="@array/recipe_level"
+            android:prompt="@string/spinner_level"/>
+        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/spinners_row_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:weightSum="1"
+        android:background="@drawable/shape_add_recipe_spinners"
+        android:orientation="horizontal"
+        android:layout_below="@id/spinners_row_top">
+        <Spinner
+            android:id="@+id/spinner_dinner_guest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:spinnerMode="dialog"
+            android:entries="@array/recipe_dinner_guest"
+            android:prompt="@string/spinner_dinner_guest"/>
+        <include
+            layout="@layout/separator"
+            android:id="@+id/separator_top"
+            android:layout_width="2dp"
+            android:layout_height="100dp"
+            android:background="@color/colorPrimaryDark"/>
+        <Spinner
+            android:id="@+id/spinner_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:spinnerMode="dialog"
+            android:entries="@array/recipe_time"
+            android:prompt="@string/spinner_time"/>
+    </LinearLayout>
+
+    <!--<ImageView-->
+        <!--android:id="@+id/img_add_recipe"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="150dp"-->
+        <!--android:background="@android:drawable/picture_frame"-->
+        <!--android:layout_below="@id/spinners_row_bottom"/>-->
+
+
+
+    <RelativeLayout
+        android:id="@+id/layout_ingredients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/spinners_row_bottom">
+        <TextView
+            android:id="@+id/tv_add_ingredients"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginStart="30dp"
+            android:layout_alignParentStart="true"
+            android:textSize="16sp"
+            android:text="@string/tv_add_ingredients"/>
+
+        <TextView
+            android:id="@+id/tv_add_ingredients_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+            android:padding="5dp"
+            android:layout_alignParentEnd="true"
+            android:textSize="16sp"
+            android:text="@string/tv_add_ingredients_amount"/>
+    </RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_ingredient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        fab:backgroundTint="@color/colorAccent"
+        fab:elevation="4dp"
+        fab:fabSize="normal"
+        fab:rippleColor="@color/colorPrimary"
+        fab:borderWidth="2dp"
+        android:src="@android:drawable/ic_input_add"/>
+
+    <include layout="@layout/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_ingredients"/>
+
+
+</RelativeLayout>

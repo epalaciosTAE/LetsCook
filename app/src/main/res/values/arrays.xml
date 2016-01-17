@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="nav_drawer_titles">
+        <item name="nav_recipes">Recipes</item>
+        <item name="nav_add_recipes">Add Recipe</item>
+        <item name="nav_other_chefs">Other Chefs</item>
+        <item name="nav_favourite_recipes">My Favourite Recipes</item>
+        <item name="nav_events">Events</item>
+    </array>
+
+    <array name="nav_drawer_icons">
+        <item name="nav_recipes_icon">@drawable/ic_nav_recipes</item>
+        <item name="nav_add_recipes_icon">@drawable/ic_nav_add_recipes</item>
+        <item name="nav_other_chefs_icon">@drawable/ic_nav_other_chefs</item>
+        <item name="nav_favourite_recipes_icon">@drawable/ic_nav_favourite_recipes</item>
+        <item name="nav_events_icon">@drawable/ic_nav_events</item>
+    </array>
+
+    <array name="nav_drawer_fragment_tags">
+        <item name="fragment_add_recipe">FragmentAddRecipe</item>
+        <item name="fragment_recipes">FragmentRecipes</item>
+        <item name="fragment_favourites">FragmentFavourites</item>
+        <item name="fragment_other_chefs">FragmentOtherChefs</item>
+        <item name="fragment_events">FragmentEvents</item>
+    </array>
+
+    <array name="category_titles">
+        <item name="category_meat">Meat</item>
+        <item name="category_fish">Fish</item>
+        <item name="category_pasta">Pasta</item>
+        <item name="category_rice">Rice</item>
+        <item name="category_salad">Salad</item>
+        <item name="category_soup">Soup</item>
+        <item name="category_dessert">Dessert</item>
+    </array>
+
+    <array name="recipe_budget">
+        <item name="zero_to_10">0-10 £</item>
+        <item name="ten_to_twenty">10-20 £</item>
+        <item name="twenty_to_thirty">20-30 £</item>
+        <item name="thirty_to_forty">30-40 £</item>
+        <item name="forty_to_fifty">40-50 £</item>
+        <item name="fifty_to_sixty">50-60 £</item>
+        <item name="sixty_to_seventy">60-70 £</item>
+        <item name="seventy_to_eighty">70-80 £</item>
+        <item name="eighty_to_ninety">80-90 £</item>
+        <item name="ninety_to_hundred">90-100 £</item>
+        <item name="over_hundred">100+ £</item>
+    </array>
+
+
+
+    <array name="recipe_level">
+        <item name="apprentice">Apprentice</item>
+        <item name="junior">Junior</item>
+        <item name="cook">Cook</item>
+        <item name="chef">Chef</item>
+        <item name="master_chef">Master Chef</item>
+        <item name="fernan_adria">Fernan Adria</item>
+    </array>
+
+    <array name="recipe_dinner_guest">
+        <item name="two">2 people</item>
+        <item name="two_four">2-4 people</item>
+        <item name="four">4 people</item>
+        <item name="four_six">4-6 people</item>
+        <item name="six">6 people</item>
+        <item name="six_eight">6-8 people</item>
+        <item name="eight">8 people</item>
+        <item name="eight_ten">8-10 people</item>
+        <item name="over_ten">10+ people</item>
+    </array>
+
+    <array name="recipe_time">
+        <item name="15_min">15 min</item>
+        <item name="30_min">30 min</item>
+        <item name="45_min">45 min</item>
+        <item name="1_hour">1 hour</item>
+        <item name="1_15_hour">1 hour 15 min</item>
+        <item name="1_30_hour">1 hour 30 min</item>
+        <item name="1_45_hour">1 hour 45 min</item>
+        <item name="2_hour">2 hour</item>
+        <item name="over_2_hour">2 hour+</item>
+    </array>
+
+
+    <array name="categories_images">
+        <item name="category_meat">@drawable/category_meat_150x70</item>
+        <item name="category_fish">@drawable/category_fish_150x70</item>
+        <item name="category_pasta">@drawable/category_pasta_150x70</item>
+        <item name="category_rice">@drawable/category_rice_150x70</item>
+        <item name="category_salad">@drawable/category_salad_150x70</item>
+        <item name="category_soup">@drawable/category_soup_150x70</item>
+        <item name="category_dessert">@drawable/category_dessert_150x70</item>
+    </array>
+    
+</resources>
