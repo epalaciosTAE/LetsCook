@@ -8,9 +8,18 @@ import android.os.Parcelable;
  */
 public class NutrientLocal implements Parcelable {
 
+    private int fkRecipe;
     private String label;
     private double total;
     private String unit;
+
+
+    public NutrientLocal(int fkRecipe, String label, double total, String unit) {
+        this.fkRecipe = fkRecipe;
+        this.label = label;
+        this.total = total;
+        this.unit = unit;
+    }
 
     public NutrientLocal(String label, double total, String unit) {
         this.label = label;
@@ -23,6 +32,7 @@ public class NutrientLocal implements Parcelable {
         label = in.readString();
         total = in.readDouble();
         unit = in.readString();
+        fkRecipe = in.readInt();
     }
 
     public static final Creator<NutrientLocal> CREATOR = new Creator<NutrientLocal>() {
@@ -47,6 +57,7 @@ public class NutrientLocal implements Parcelable {
         dest.writeString(label);
         dest.writeDouble(total);
         dest.writeString(unit);
+        dest.writeInt(fkRecipe);
     }
 
     public String getLabel() {

@@ -18,6 +18,12 @@ public class RecipeLocal implements Parcelable {
     private List<String> ingredientLines, dietLabels;
     private List<NutrientLocal> nutrients;
 
+    public RecipeLocal(String label, String imageUrl, double calories) {
+        this.label = label;
+        this.imageUrl = imageUrl;
+        this.calories = calories;
+    }
+
     public RecipeLocal(String label, String imageUrl, double calories, List<String> ingredientLines, List<NutrientLocal> nutrients, List<String> dietLabels) {
         this.label = label;
         this.imageUrl = imageUrl;
