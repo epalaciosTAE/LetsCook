@@ -59,7 +59,7 @@ public class LetsCookRestAdapter {
 
             @Override
             public void failure(RetrofitError error) {
-
+                handleFailure(error);
             }
         });
     }
@@ -81,17 +81,21 @@ public class LetsCookRestAdapter {
 
             @Override
             public void failure(RetrofitError error) {
-                if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                    ToastUtils.showToastErrorInRetrofit(context, "Http error: ", error);
-                } else if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                    ToastUtils.showToastErrorInRetrofit(context, "Network error: ", error);
-                } else if (error.getKind().equals(RetrofitError.Kind.CONVERSION)) {
-                    ToastUtils.showToastErrorInRetrofit(context, "Conversion error: ", error);
-                } else {
-                    ToastUtils.showToastErrorInRetrofit(context, "Unknown error: ", error);
-                }
+                handleFailure(error);
             }
         });
+    }
+
+    private void handleFailure(RetrofitError error) {
+        if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+            ToastUtils.showToastErrorInRetrofit(context, "Http error: ", error);
+        } else if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+            ToastUtils.showToastErrorInRetrofit(context, "Network error: ", error);
+        } else if (error.getKind().equals(RetrofitError.Kind.CONVERSION)) {
+            ToastUtils.showToastErrorInRetrofit(context, "Conversion error: ", error);
+        } else {
+            ToastUtils.showToastErrorInRetrofit(context, "Unknown error: ", error);
+        }
     }
 
 }

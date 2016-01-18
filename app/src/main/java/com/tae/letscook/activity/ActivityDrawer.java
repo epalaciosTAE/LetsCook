@@ -83,7 +83,7 @@ public class ActivityDrawer extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         ButterKnife.bind(this);
-        loadHomeRecipes();
+//        loadHomeRecipes();
         setSupportActionBar(mToolbar);
         setRecyclerView();
         setDrawerToggle();
@@ -242,9 +242,7 @@ public class ActivityDrawer extends AppCompatActivity
                 DialogFragmentRecipeTitle.newInstance().show(
                         getSupportFragmentManager(),
                         getResources().getString(R.string.fragment_add_recipe));
-            }else if (position == Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION) {
-                displayFragment(FragmentRecipesViewer.newInstance(), "test");
-            } else {
+            }else {
                 displayFragment(mDrawerFragments.get(position), mFragmentTags[position]);
             }
         }

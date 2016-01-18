@@ -55,4 +55,9 @@ public class Constants {
     public static final String FAT = "Low-Fat";
     public static final String SODIUM = "Low-Sodium";
     public static final String BALANCED = "Balanced";
+    public static final CharSequence VIEW_PAGER_WORLD_FOOD = "World Food";
+    public static final CharSequence VIEW_PAGER_SUGGESTIONS = "Suggestions";
+
+//    "http://s1.1zoom.net/big3/862/340361-svetik.jpg"
+//    "http://www.nutritionbymi.com/wordpress/wp-content/uploads/2013/07/shutterstock_131743067.jpg"
 }
