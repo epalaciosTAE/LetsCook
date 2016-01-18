@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tae.letscook.R;
+import com.tae.letscook.activity.ActivityDrawer;
 import com.tae.letscook.adapter.AdapterNutrients;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.model.NutrientLocal;
@@ -41,6 +42,7 @@ public class FragmentNutrients extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        getActivity().setTitle(getActivity().getString(R.string.fragment_nutrients_title));
 //        nutriens = (List<NutrientLocal>) getArguments().get(Constants.EXTRA_NUTRIENTS);
     }
 
@@ -54,5 +56,11 @@ public class FragmentNutrients extends Fragment {
         recyclerView.setAdapter(new AdapterNutrients(getActivity(),
                 (List<NutrientLocal>) getArguments().get(Constants.EXTRA_NUTRIENTS)));
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

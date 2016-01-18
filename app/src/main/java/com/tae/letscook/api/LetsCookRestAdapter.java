@@ -2,23 +2,17 @@ package com.tae.letscook.api;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.tae.letscook.Utils.ModelConverter;
 import com.tae.letscook.Utils.ToastUtils;
-import com.tae.letscook.api.apiModel.Digest;
 import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.constants.ServerConstants;
 import com.tae.letscook.constants.ActionConstants;
-import com.tae.letscook.model.Item;
-import com.tae.letscook.model.NutrientLocal;
-import com.tae.letscook.model.RecipeLocal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -60,7 +54,7 @@ public class LetsCookRestAdapter {
                 LocalBroadcastManager.getInstance(context)
                         .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS)
                         .putParcelableArrayListExtra(Constants.EXTRA_RECIPES,
-                                ModelConverter.convertApiRecipesToLocalRecipes(hits)));
+                                ModelConverter.convertApiModelToLocalRecipes(hits)));
             }
 
             @Override
@@ -80,7 +74,9 @@ public class LetsCookRestAdapter {
             public void success(List<Recipe> recipes, Response response) {
                 Log.i(TAG, "getRandomRecipes success: " + response.getStatus());
                 LocalBroadcastManager.getInstance(context)
-                        .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS));
+                        .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS)
+                        .putParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM,
+                                ModelConverter.convertRecipeApiToLocalRecipe(recipes)));
             }
 
             @Override

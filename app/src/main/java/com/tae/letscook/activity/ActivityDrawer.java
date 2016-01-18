@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -42,6 +43,7 @@ import com.tae.letscook.fragment.FragmentNutrients;
 import com.tae.letscook.fragment.FragmentOtherChefs;
 import com.tae.letscook.fragment.FragmentRecipeDetail;
 import com.tae.letscook.fragment.FragmentRecipes;
+import com.tae.letscook.fragment.FragmentRecipesViewer;
 import com.tae.letscook.listeners.OnCategoryItemListener;
 import com.tae.letscook.listeners.OnItemClickListener;
 import com.tae.letscook.listeners.OnNutrientsListener;
@@ -73,13 +75,15 @@ public class ActivityDrawer extends AppCompatActivity
 //    private int categoryPosition;
     private LetsCookReceiver receiver;
     private ProgressDialog progressDialog;
-    private List<RecipeLocal>recipes;
+    private List<RecipeLocal>recipes, recipesOfTheDay;
+    private boolean ofTheDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         ButterKnife.bind(this);
+        loadHomeRecipes();
         setSupportActionBar(mToolbar);
         setRecyclerView();
         setDrawerToggle();
@@ -92,7 +96,10 @@ public class ActivityDrawer extends AppCompatActivity
         mDrawerFragments = getDrawerFragments();
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
+    }
 
+    private void loadHomeRecipes() {
+        startService(LetsCookService.makeIntentHomeView(ActivityDrawer.this));
     }
 
     private void initProgressDialog() {
@@ -235,6 +242,8 @@ public class ActivityDrawer extends AppCompatActivity
                 DialogFragmentRecipeTitle.newInstance().show(
                         getSupportFragmentManager(),
                         getResources().getString(R.string.fragment_add_recipe));
+            }else if (position == Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION) {
+                displayFragment(FragmentRecipesViewer.newInstance(), "test");
             } else {
                 displayFragment(mDrawerFragments.get(position), mFragmentTags[position]);
             }
@@ -248,7 +257,8 @@ public class ActivityDrawer extends AppCompatActivity
     @NonNull
     private SparseArray<Fragment> getDrawerFragments() {
         mDrawerFragments = new SparseArray<>(Constants.DRAWER_ITEMS_SIZE);
-        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION, FragmentCategories.newInstance());
+        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION, FragmentRecipesViewer.newInstance());
+//        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION, FragmentCategories.newInstance());
 //        mDrawerFragments.put(Constants.FRAGMENT_ADD_RECIPE_POSITION, FragmentAddRecipe.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_OTHER_CHEFS_POSITION, FragmentOtherChefs.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_FAVOURITES_POSITION, FragmentFavourites.newInstance());
@@ -310,7 +320,9 @@ public class ActivityDrawer extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS));
+        IntentFilter intentFilter = new IntentFilter(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS);
+        intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 
     @Override
@@ -327,7 +339,11 @@ public class ActivityDrawer extends AppCompatActivity
     @Override
     public void onItemClick(int position) {
         Log.i(TAG, "onItemClick: position " + position);
-        displayFragment(FragmentRecipeDetail.newInstance(recipes.get(position)),getString(R.string.fragment_recipe_detail));
+        if (ofTheDay) {
+            displayFragment(FragmentRecipeDetail.newInstance(recipesOfTheDay.get(position)),getString(R.string.fragment_recipe_detail));
+        } else {
+            displayFragment(FragmentRecipeDetail.newInstance(recipes.get(position)),getString(R.string.fragment_recipe_detail));
+        }
     }
 
     @Override
@@ -347,12 +363,17 @@ public class ActivityDrawer extends AppCompatActivity
             switch (intent.getAction()) {
                 case ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS :
                     Log.i(TAG, "onReceive: ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS ");
+                    ofTheDay = false;
                     recipes = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES);
-                    displayFragment(FragmentRecipes.newInstance((ArrayList<ItemRecipe>) ModelConverter.convertLocalRecipeToItemRecipe(recipes)),
+                    displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes),false),
                             getResources().getString(R.string.fragment_recipes));
                     break;
                 case ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS :
                     Log.i(TAG, "onReceive: ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS ");
+                    ofTheDay = true;
+                    recipesOfTheDay = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM);
+                    displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay), true),
+                            getResources().getString(R.string.fragment_recipes));
                     break;
             }
             progressDialog.dismiss();

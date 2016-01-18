@@ -29,23 +29,25 @@ public class Constants {
     public static final int CATEGORY_DESERT_ID = 6;
 
     public static final String EXTRA_CATEGORY = "extra_category";
-    public static final String EXTRA_RECIPES = "exra_recipes";
-    public static final String EXTRA_ITEM_RECIPES = "exra_item_recipes";
+    public static final String EXTRA_RECIPES = "extra_recipes";
+    public static final String EXTRA_ITEM_RECIPES = "extra_item_recipes";
+    public static final String EXTRA_TITLE = "extra_title";
+
+    public static final String EXTRA_RECIPES_RANDOM = "extra_recipes_random";
     public static final String EXTRA_NUTRIENTS = "extra_nutrients";
 
     public static final String ARGS_CATEGORY_ID = "args_category_id";
-    public static final String ARGS_RECIPE_TITLE= "args_recipe_title";
 
+    public static final String ARGS_RECIPE_TITLE= "args_recipe_title";
     public static final String ARGS_RECIPE_CATEGORY= "args_recipe_category";
 
     public static final String RECIPE = "Recipe: ";
     public static final int PERMISSIONS_REQUEST_CAMERA = 101;
-
     public static final int PERMISSIONS_REQUEST_WRITE_STORAGE = 102;
     public static final String CAMERA_IMAGES_FOLDER = "LetsCook";
+
     public static final int REQUEST_CAMERA_IMAGE = 201;
     public static final int CARD_VIEW_KCAL = 1;
-
     public static final String KCAL = "calories";
     public static final String PROTEIN = "High-Protein";
     public static final String FIBER = "High-Fiber";

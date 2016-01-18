@@ -66,7 +66,6 @@ public class FragmentRecipeDetail extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recipe = (RecipeLocal) getArguments().get(Constants.EXTRA_RECIPES);
-
     }
 
     @Nullable
@@ -159,5 +158,11 @@ public class FragmentRecipeDetail extends Fragment {
     public void onDetach() {
         super.onDetach();
         onNutrientsListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

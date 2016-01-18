@@ -12,7 +12,7 @@ import android.view.ViewGroup;
  */
 public class FragmentRecipesOfTheDay extends Fragment {
 
-    public FragmentRecipesOfTheDay newInstance() {
+    public static FragmentRecipesOfTheDay newInstance() {
         return new FragmentRecipesOfTheDay();
     }
 
