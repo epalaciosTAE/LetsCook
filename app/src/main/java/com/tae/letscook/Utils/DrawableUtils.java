@@ -12,6 +12,7 @@ import com.tae.letscook.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Eduardo on 07/12/2015.
@@ -32,6 +33,21 @@ public class DrawableUtils {
         } else {
             return context.getResources().getDrawable(R.drawable.drawable_selector_item);
         }
+    }
+
+    public static Integer randomDrawable() {
+        List<Integer> drawables = new ArrayList<>(10);
+        drawables.add(R.drawable.img_avocado);
+        drawables.add(R.drawable.img_chocolate);
+        drawables.add(R.drawable.img_egg);
+        drawables.add(R.drawable.img_fish_smoking);
+        drawables.add(R.drawable.img_pasta);
+        drawables.add(R.drawable.img_ribs);
+        drawables.add(R.drawable.img_rice);
+        drawables.add(R.drawable.img_species);
+        drawables.add(R.drawable.img_steak);
+        drawables.add(R.drawable.img_vegetables);
+        return drawables.get(new Random().nextInt(drawables.size()));
     }
 
     /**
