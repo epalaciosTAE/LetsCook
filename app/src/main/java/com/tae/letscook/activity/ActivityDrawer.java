@@ -74,13 +74,11 @@ public class ActivityDrawer extends AppCompatActivity
     @Bind(R.id.tv_logout) protected TextView tvLogout;
     private SparseArray<Fragment> mDrawerFragments;
     private String[] mFragmentTags;
-//    private int categoryPosition;
     private LetsCookReceiver receiver;
     private ProgressDialog progressDialog;
     private List<RecipeLocal>recipes, recipesOfTheDay;
     private List<ItemRecipe> suggestions;
     private boolean ofTheDay;
-//    private FragmentRecipesViewer fragmentRecipesViewer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,19 +94,9 @@ public class ActivityDrawer extends AppCompatActivity
         initProgressDialog();
         mToolbar.setNavigationIcon(android.R.drawable.star_big_on); // this changes the burguer
 
-        mDrawerFragments = getDrawerFragments();
-//        fragmentRecipesViewer = (FragmentRecipesViewer) mDrawerFragments.get(Constants.FRAGMENT_RECIPE_PAGER_POSITION);
+        mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable()){ //FIXME Bug in real devices connecting with server
-            // DO WHAT YOU NEED TO DO ON THE NETWORK
-            Log.i(TAG, "onCreate: network is enable");
-//            downloadRecipesByCategory("Meat");
-        } else {
-            Log.i(TAG, "onCreate: network is not enable");
-        }
     }
 
     private void loadSuggestionRecipes() {
@@ -122,18 +110,6 @@ public class ActivityDrawer extends AppCompatActivity
     private void initLetsCookReceiver() {
         receiver = new LetsCookReceiver();
     }
-
-//    private void setToolbar() {
-//        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        mToolbar.setTitle("");
-//        mToolbar.inflateMenu(R.menu.menu_main);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                drawerLayout.openDrawer(GravityCompat.START);
-//            }
-//        });
-//    }
 
     /**
      * Enable ripple effect in the logout option in the navigation drawer
@@ -232,49 +208,18 @@ public class ActivityDrawer extends AppCompatActivity
     @Override
     public void onItemClick(View view, int position, int adapterId) {
         Log.i("DrawerActivity", "onItemClick: " + position);
-//        Fragment currentFragment = null;
-//        String currentFragmentTag = null;
-//        switch (position) {
-//            case Constants.FRAGMENT_RECIPE_PAGER_POSITION:
-//                currentFragment = FragmentRecipes.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_recipes);
-//                break;
-//            case Constants.FRAGMENT_ADD_RECIPE_POSITION:
-//                currentFragment = FragmentAddRecipe.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_add_recipe);
-//                break;
-//            case Constants.FRAGMENT_OTHER_CHEFS_POSITION:
-//                currentFragment = FragmentOtherChefs.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_other_chefs);
-//                break;
-//            case Constants.FRAGMENT_FAVOURITES_POSITION:
-//                currentFragment = FragmentFavourites.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_favourites);
-//                break;
-//            case Constants.FRAGMENT_EVENTS_POSITION:
-//                currentFragment = FragmentEvents.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_events);
-//                break;
-//        }
-//        mDrawerLayout.closeDrawer(GravityCompat.START);
-//        displayFragment(currentFragment, currentFragmentTag);
-
         if (adapterId == Constants.ADAPTER_DRAWER_ID) { //display fragment in drawer
-//            SparseArray<Fragment> mFragments = getDrawerFragments();
-//            String[] mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
             mDrawerLayout.closeDrawer(GravityCompat.START);
             if (position == Constants.FRAGMENT_ADD_RECIPE_POSITION) { // before display add recipe fragment display dialog to get title
                 DialogFragmentRecipeTitle.newInstance().show(
                         getSupportFragmentManager(),
                         getResources().getString(R.string.fragment_add_recipe));
             } else if (position == Constants.FRAGMENT_RECIPE_PAGER_POSITION){
-//                Log.i(TAG, "onItemClick: show fragment: " + mDrawerFragments.get(position).toString() + " tag: " + mFragmentTags[position -1]);
                 loadSuggestionRecipes();
                 progressDialog.show();
             } else{
                 Log.i(TAG, "onItemClick: show fragment: " + mDrawerFragments.get(position).toString() + " tag: " + mFragmentTags[position -1]);
                 displayFragment(mDrawerFragments.get(position), mFragmentTags[position -1]);
-
             }
         }
     }
@@ -336,14 +281,11 @@ public class ActivityDrawer extends AppCompatActivity
     public void onCategoryItemClick(View v, int position, String category, boolean isCategory) { //Click in categories: display fragment recipes when click any item in fragment categories
         if (isCategory) {
             Log.i("MAIN", "onItemClick: adapter categories  " + String.valueOf(position));
-//        categoryPosition = position;
             downloadRecipesByCategory(category);
             progressDialog.setMessage("Loading recipes");
             progressDialog.show();
-        } else { //is suggestion, is its a recipe--> detail
-            if (category.equals(recipesOfTheDay.get(position - 1).getLabel())) {
-                displayFragment(FragmentRecipeDetail.newInstance(recipesOfTheDay.get(position - 1)), getResources().getString(R.string.fragment_recipes_detail));
-            }
+        } else if (category.equals(recipesOfTheDay.get(position - 1).getLabel())) { //is suggestion, is its a recipe--> detail
+            displayFragment(FragmentRecipeDetail.newInstance(recipesOfTheDay.get(position - 1)), getResources().getString(R.string.fragment_recipes_detail));
         }
 
     }
@@ -424,23 +366,6 @@ public class ActivityDrawer extends AppCompatActivity
 //                    }
 //                    setSuggestionRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay));
                     displayFragment(FragmentRecipesViewer.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay)), mFragmentTags[0]);
-//                    if (fragmentRecipesViewer == null) {
-//                        fragmentRecipesViewer = (FragmentRecipesViewer) mDrawerFragments.get(Constants.FRAGMENT_RECIPE_PAGER_POSITION);
-//                    }
-//                    fragmentRecipesViewer.updateSuggestions(test);
-//                    displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay), true),
-//                            getResources().getString(R.string.fragment_recipes));
-                    // TODO update list of Suggestions viewpager
-//                    FragmentRecipesViewer fragmentRecipesViewer = (FragmentRecipesViewer) getSupportFragmentManager().findFragmentByTag(mFragmentTags[0]);
-
-//                    ToastUtils.showToast(getApplicationContext(), "Suggestions of the day loaded!");
-//                    if (fragmentRecipesViewer != null) {
-//                        Log.i(TAG, "onReceive: fragment pager  is alive? " + fragmentRecipesViewer.isVisible());
-////                        fragmentRecipesViewer.updateSuggestions(test);
-//                    } else {
-//                        Log.i(TAG, "onReceive: fragment pager is visible? NO" );
-//                    }
-
                     break;
             }
             if (progressDialog != null) {

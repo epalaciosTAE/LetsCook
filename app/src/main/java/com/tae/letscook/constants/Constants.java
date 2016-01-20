@@ -62,6 +62,7 @@ public class Constants {
     public static final int FADE_IN = 0;
     public static final int FADE_OUT = 1;
     public static final String CHECK_RANDOM_RECIPES = "Don't miss the suggestions for today!";
+    public static final CharSequence ADD_TO_FAVOURITES = "Adding to favourites";
 
 //    "http://s1.1zoom.net/big3/862/340361-svetik.jpg"
 //    "http://www.nutritionbymi.com/wordpress/wp-content/uploads/2013/07/shutterstock_131743067.jpg"
