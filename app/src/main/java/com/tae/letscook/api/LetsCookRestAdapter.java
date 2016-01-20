@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.tae.letscook.Utils.ModelConverter;
+import com.tae.letscook.Utils.NetworkUtils;
 import com.tae.letscook.Utils.ToastUtils;
 import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
@@ -53,15 +54,13 @@ public class LetsCookRestAdapter {
                 Log.i(TAG, "getRecipesByCategory success: response " + response.getStatus());
                 LocalBroadcastManager.getInstance(context)
                         .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS)
-                        .putParcelableArrayListExtra(Constants.EXTRA_RECIPES,
-                                ModelConverter.convertApiModelToLocalRecipes(hits)));
+                                .putParcelableArrayListExtra(Constants.EXTRA_RECIPES,
+                                        ModelConverter.convertApiModelToLocalRecipes(hits)));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                handleFailure(error);
-//                LocalBroadcastManager.getInstance(context)
-//                        .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS));
+                NetworkUtils.handleRestAdapterFailure(context,error);
             }
         });
     }
@@ -83,21 +82,10 @@ public class LetsCookRestAdapter {
 
             @Override
             public void failure(RetrofitError error) {
-                handleFailure(error);
+                NetworkUtils.handleRestAdapterFailure(context,error);
             }
         });
     }
 
-    private void handleFailure(RetrofitError error) {
-        if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-            ToastUtils.showToastErrorInRetrofit(context, "Http error: ", error);
-        } else if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-            ToastUtils.showToastErrorInRetrofit(context, "Network error: ", error);
-        } else if (error.getKind().equals(RetrofitError.Kind.CONVERSION)) {
-            ToastUtils.showToastErrorInRetrofit(context, "Conversion error: ", error);
-        } else {
-            ToastUtils.showToastErrorInRetrofit(context, "Unknown error: ", error);
-        }
-    }
 
 }

@@ -27,6 +27,7 @@ public class LetsCookService extends IntentService {
         intent.putExtra(Constants.EXTRA_CATEGORY, category);
         return intent;
     }
+
     public static Intent makeIntentHomeView(Context context) {
         Intent intent = new Intent(context, LetsCookService.class);
         intent.setAction(ActionConstants.ACTION_RECIPES_RANDOM);

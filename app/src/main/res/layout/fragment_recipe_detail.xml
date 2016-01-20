@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -10,14 +10,18 @@
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
         android:layout_height="200dp"/>
-    <RatingBar
-        android:id="@+id/rb_recipe_detail"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_recipe_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/img_recipe_detail"
-        android:numStars="1"
-        android:stepSize="1.0"
-        android:rating="0.0" />
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_like"
+        fab:backgroundTint="@color/colorAccent"
+        fab:elevation="4dp"
+        fab:fabSize="mini"
+        fab:rippleColor="@color/colorPrimary"
+        fab:borderWidth="2dp"
+        android:layout_alignEnd="@id/img_recipe_detail"/>
 
 
     <ImageView

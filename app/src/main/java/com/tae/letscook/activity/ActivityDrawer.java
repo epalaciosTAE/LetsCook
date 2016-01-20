@@ -369,11 +369,11 @@ public class ActivityDrawer extends AppCompatActivity
                     ofTheDay = true;
                     ToastUtils.showToast(ActivityDrawer.this, Constants.CHECK_RANDOM_RECIPES);
                     recipesOfTheDay = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM);
+                    // FAKE LIST FOR TEST
 //                    List<ItemRecipe> test = new ArrayList<>(1);
 //                    for (int i = 0; i < 10; i++) {
 //                        test.add(new ItemRecipe("dfdsdfsdfsd", "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg"));
 //                    }
-//                    setSuggestionRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay));
                     displayFragment(FragmentRecipesViewer.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay)), mFragmentTags[0]);
                     break;
             }
