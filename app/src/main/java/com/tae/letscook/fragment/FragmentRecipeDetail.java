@@ -1,35 +1,28 @@
 package com.tae.letscook.fragment;
 
-import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tae.letscook.R;
 import com.tae.letscook.adapter.AdapterOneItem;
-import com.tae.letscook.api.apiModel.Recipe;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.listeners.OnNutrientsListener;
-import com.tae.letscook.model.NutrientLocal;
 import com.tae.letscook.model.RecipeLocal;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.tae.letscook.service.SaveRecipeToFavsTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,8 +31,9 @@ import butterknife.OnClick;
 /**
  * Created by Eduardo on 16/01/2016.
  */
-public class FragmentRecipeDetail extends Fragment {
+public class FragmentRecipeDetail extends Fragment implements RatingBar.OnRatingBarChangeListener{
 
+    private static final String TAG = SaveRecipeToFavsTask.class.getSimpleName();
     @Bind(R.id.tv_recipe_detail_title) protected TextView tvTitle;
     @Bind(R.id.img_recipe_detail) protected ImageView img;
     @Bind(R.id.img_recipe_detail_kcal) protected ImageView imgKcal;
@@ -50,9 +44,11 @@ public class FragmentRecipeDetail extends Fragment {
     @Bind(R.id.img_recipe_detail_fat) protected ImageView imgFat;
     @Bind(R.id.img_recipe_detail_balance) protected ImageView imgBalance;
     @Bind(R.id.recycler_view) protected RecyclerView recyclerView;
+    @Bind(R.id.rb_recipe_detail) protected RatingBar rbFavourite;
+//    private ProgressDialog progressDialog;
     private OnNutrientsListener onNutrientsListener;
-
     private RecipeLocal recipe;
+
 
     public static FragmentRecipeDetail newInstance (RecipeLocal recipe) {
         Bundle bundle = new Bundle();
@@ -66,7 +62,6 @@ public class FragmentRecipeDetail extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recipe = (RecipeLocal) getArguments().get(Constants.EXTRA_RECIPES);
-
     }
 
     @Nullable
@@ -74,6 +69,7 @@ public class FragmentRecipeDetail extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, view);
+        rbFavourite.setOnRatingBarChangeListener(this);
         onNutrientsListener = (OnNutrientsListener) getActivity();
         tvTitle.setText(recipe.getLabel());
         Picasso.with(getActivity()).load(recipe.getImageUrl()).resize(600, 300).centerCrop().into(img);
@@ -82,7 +78,6 @@ public class FragmentRecipeDetail extends Fragment {
         recyclerView.setAdapter(new AdapterOneItem(getActivity(), recipe.getIngredientLines()));
         Picasso.with(getActivity()).load(R.drawable.ic_kcal).into(imgKcal);
         displayDietIcons();
-
         return view;
     }
 
@@ -151,6 +146,8 @@ public class FragmentRecipeDetail extends Fragment {
         }
     }
 
+
+
     private void showSnackBar(View view, String diet) {
         Snackbar.make(view, diet, Snackbar.LENGTH_SHORT).show();
     }
@@ -159,5 +156,26 @@ public class FragmentRecipeDetail extends Fragment {
     public void onDetach() {
         super.onDetach();
         onNutrientsListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    /**
+     * Rating star starts an asynctask to save the recipe in data base
+     * @param ratingBar
+     * @param rating
+     * @param fromUser
+     */
+    @Override
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        Log.i(TAG, "onRatingChanged: rating: " + rating);
+        if (rating > 0) {
+            SaveRecipeToFavsTask saveTask = new SaveRecipeToFavsTask(getActivity());
+            saveTask.execute(recipe);
+        }
     }
 }

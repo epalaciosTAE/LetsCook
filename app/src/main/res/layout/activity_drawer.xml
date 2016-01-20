@@ -16,38 +16,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay">
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:minHeight="?attr/actionBarSize"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
-                android:background="@color/colorPrimaryDark"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            <include layout="@layout/toolbar"/>
         </android.support.design.widget.AppBarLayout>
         <include layout="@layout/content_drawer"/>
     </LinearLayout>
 
     <RelativeLayout
-
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/white">
-
         <include layout="@layout/recycler_view"
                  android:id="@+id/rv_navigation_drawer"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:layout_above="@+id/separator"/>
-
         <include layout="@layout/separator"
                  android:id="@+id/separator"
                  android:layout_width="match_parent"
                  android:layout_height="1dp"
                  android:layout_above="@+id/tv_logout"/>
-
-
         <TextView
             android:id="@+id/tv_logout"
             android:layout_width="match_parent"
@@ -61,8 +49,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="14sp"
             android:text="@string/nav_logout"/>
-
-
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
 

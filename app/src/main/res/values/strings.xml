@@ -8,6 +8,7 @@
     <!-- Fragment tags -->
     <string name="fragment_add_recipe">FragmentAddRecipe</string>
     <string name="fragment_recipes">FragmentRecipes</string>
+    <string name="fragment_recipes_detail">FragmentRecipesDetail</string>
     <string name="fragment_favourites">FragmentFavourites</string>
     <string name="fragment_other_chefs">FragmentOtherChefs</string>
     <string name="fragment_events">FragmentEvents</string>
@@ -36,6 +37,10 @@
     <string name="menu_camera">Take Picture</string>
     <string name="fragment_recipe_detail">FragmentRecipeDetail</string>
     <string name="fragment_nutrients">FragmentNutrients</string>
+    <string name="fragment_add_recipe_title">New Recipe</string>
+    <string name="fragment_categories_title">Categories</string>
+    <string name="fragment_nutrients_title">Nutrients</string>
+    <string name="recipes_of_the_day">Recipes of the Day</string>
 
 
 </resources>

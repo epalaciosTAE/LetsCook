@@ -1,25 +1,23 @@
 package com.tae.letscook.model;
 
 /**
- * Created by Eduardo on 15/01/2016.
+ * Created by Eduardo on 17/01/2016.
  */
 public class IngredientLocal {
 
-    private String name;
-    private String amount;
+    private int fkRecipe;
+    private String ingredient;
 
-    public IngredientLocal(String name, String amount) {
-        this.name = name;
-        this.amount = amount;
+    public IngredientLocal(int fkRecipe, String ingredient) {
+        this.fkRecipe = fkRecipe;
+        this.ingredient = ingredient;
     }
 
-    public String getName() {
-        return name;
+    public int getFkRecipe() {
+        return fkRecipe;
     }
 
-    public String getAmount() {
-        return amount;
+    public String getIngredient() {
+        return ingredient;
     }
-
-
 }

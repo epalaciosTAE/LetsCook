@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,9 +27,11 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.florent37.materialviewpager.Utils;
 import com.tae.letscook.Utils.ModelConverter;
-import com.tae.letscook.api.apiModel.Recipe;
+import com.tae.letscook.Utils.ToastUtils;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.Utils.DrawableUtils;
 import com.tae.letscook.R;
@@ -35,13 +39,13 @@ import com.tae.letscook.adapter.AdapterDrawer;
 import com.tae.letscook.constants.ActionConstants;
 import com.tae.letscook.dialog.DialogFragmentRecipeTitle;
 import com.tae.letscook.fragment.FragmentAddRecipe;
-import com.tae.letscook.fragment.FragmentCategories;
 import com.tae.letscook.fragment.FragmentEvents;
 import com.tae.letscook.fragment.FragmentFavourites;
 import com.tae.letscook.fragment.FragmentNutrients;
 import com.tae.letscook.fragment.FragmentOtherChefs;
 import com.tae.letscook.fragment.FragmentRecipeDetail;
 import com.tae.letscook.fragment.FragmentRecipes;
+import com.tae.letscook.fragment.FragmentRecipesViewer;
 import com.tae.letscook.listeners.OnCategoryItemListener;
 import com.tae.letscook.listeners.OnItemClickListener;
 import com.tae.letscook.listeners.OnNutrientsListener;
@@ -70,10 +74,11 @@ public class ActivityDrawer extends AppCompatActivity
     @Bind(R.id.tv_logout) protected TextView tvLogout;
     private SparseArray<Fragment> mDrawerFragments;
     private String[] mFragmentTags;
-//    private int categoryPosition;
     private LetsCookReceiver receiver;
     private ProgressDialog progressDialog;
-    private List<RecipeLocal>recipes;
+    private List<RecipeLocal>recipes, recipesOfTheDay;
+    private List<ItemRecipe> suggestions;
+    private boolean ofTheDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,10 +94,13 @@ public class ActivityDrawer extends AppCompatActivity
         initProgressDialog();
         mToolbar.setNavigationIcon(android.R.drawable.star_big_on); // this changes the burguer
 
-        mDrawerFragments = getDrawerFragments();
+        mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
+    }
 
+    private void loadSuggestionRecipes() {
+        startService(LetsCookService.makeIntentHomeView(ActivityDrawer.this));
     }
 
     private void initProgressDialog() {
@@ -200,43 +208,18 @@ public class ActivityDrawer extends AppCompatActivity
     @Override
     public void onItemClick(View view, int position, int adapterId) {
         Log.i("DrawerActivity", "onItemClick: " + position);
-//        Fragment currentFragment = null;
-//        String currentFragmentTag = null;
-//        switch (position) {
-//            case Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION:
-//                currentFragment = FragmentRecipes.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_recipes);
-//                break;
-//            case Constants.FRAGMENT_ADD_RECIPE_POSITION:
-//                currentFragment = FragmentAddRecipe.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_add_recipe);
-//                break;
-//            case Constants.FRAGMENT_OTHER_CHEFS_POSITION:
-//                currentFragment = FragmentOtherChefs.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_other_chefs);
-//                break;
-//            case Constants.FRAGMENT_FAVOURITES_POSITION:
-//                currentFragment = FragmentFavourites.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_favourites);
-//                break;
-//            case Constants.FRAGMENT_EVENTS_POSITION:
-//                currentFragment = FragmentEvents.newInstance();
-//                currentFragmentTag = getResources().getString(R.string.fragment_events);
-//                break;
-//        }
-//        mDrawerLayout.closeDrawer(GravityCompat.START);
-//        displayFragment(currentFragment, currentFragmentTag);
-
         if (adapterId == Constants.ADAPTER_DRAWER_ID) { //display fragment in drawer
-//            SparseArray<Fragment> mFragments = getDrawerFragments();
-//            String[] mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
             mDrawerLayout.closeDrawer(GravityCompat.START);
             if (position == Constants.FRAGMENT_ADD_RECIPE_POSITION) { // before display add recipe fragment display dialog to get title
                 DialogFragmentRecipeTitle.newInstance().show(
                         getSupportFragmentManager(),
                         getResources().getString(R.string.fragment_add_recipe));
-            } else {
-                displayFragment(mDrawerFragments.get(position), mFragmentTags[position]);
+            } else if (position == Constants.FRAGMENT_RECIPE_PAGER_POSITION){
+                loadSuggestionRecipes();
+                progressDialog.show();
+            } else{
+                Log.i(TAG, "onItemClick: show fragment: " + mDrawerFragments.get(position).toString() + " tag: " + mFragmentTags[position -1]);
+                displayFragment(mDrawerFragments.get(position), mFragmentTags[position -1]);
             }
         }
     }
@@ -248,7 +231,8 @@ public class ActivityDrawer extends AppCompatActivity
     @NonNull
     private SparseArray<Fragment> getDrawerFragments() {
         mDrawerFragments = new SparseArray<>(Constants.DRAWER_ITEMS_SIZE);
-        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION, FragmentCategories.newInstance());
+//        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_PAGER_POSITION, FragmentRecipesViewer.newInstance());
+//        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_PAGER_POSITION, FragmentCategories.newInstance());
 //        mDrawerFragments.put(Constants.FRAGMENT_ADD_RECIPE_POSITION, FragmentAddRecipe.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_OTHER_CHEFS_POSITION, FragmentOtherChefs.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_FAVOURITES_POSITION, FragmentFavourites.newInstance());
@@ -283,7 +267,7 @@ public class ActivityDrawer extends AppCompatActivity
      * @param category
      */
     @Override
-    public void setTitle(String title, String category) {
+    public void showRecipes(String title, String category) {
         displayFragment(FragmentAddRecipe.newInstance(title, category), getResources().getString(R.string.fragment_add_recipe));
     }
 
@@ -294,23 +278,29 @@ public class ActivityDrawer extends AppCompatActivity
      * @param category
      */
     @Override
-    public void onCategoryItemClick(View v, int position, String category) { //Click in categories: display fragment recipes when click any item in fragment categories
-        Log.i("MAIN", "onItemClick: adapter categories  " + position);
-//        categoryPosition = position;
-        downloadRecipesByCategory(category);
-        progressDialog.setMessage("Loading recipes");
-        progressDialog.show();
+    public void onCategoryItemClick(View v, int position, String category, boolean isCategory) { //Click in categories: display fragment recipes when click any item in fragment categories
+        if (isCategory) {
+            Log.i("MAIN", "onItemClick: adapter categories  " + String.valueOf(position));
+            downloadRecipesByCategory(category);
+            progressDialog.setMessage("Loading recipes");
+            progressDialog.show();
+        } else if (category.equals(recipesOfTheDay.get(position - 1).getLabel())) { //is suggestion, is its a recipe--> detail
+            displayFragment(FragmentRecipeDetail.newInstance(recipesOfTheDay.get(position - 1)), getResources().getString(R.string.fragment_recipes_detail));
+        }
 
     }
 
     private void downloadRecipesByCategory(String category) {
+        Log.i(TAG, "downloadRecipesByCategory: starting service");
         startService(LetsCookService.makeIntentWithCategory(getApplicationContext(), category));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS));
+        IntentFilter intentFilter = new IntentFilter(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS);
+        intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 
     @Override
@@ -327,7 +317,11 @@ public class ActivityDrawer extends AppCompatActivity
     @Override
     public void onItemClick(int position) {
         Log.i(TAG, "onItemClick: position " + position);
-        displayFragment(FragmentRecipeDetail.newInstance(recipes.get(position)),getString(R.string.fragment_recipe_detail));
+        if (ofTheDay) {
+            displayFragment(FragmentRecipeDetail.newInstance(recipesOfTheDay.get(position)),getString(R.string.fragment_recipe_detail));
+        } else {
+            displayFragment(FragmentRecipeDetail.newInstance(recipes.get(position)),getString(R.string.fragment_recipe_detail));
+        }
     }
 
     @Override
@@ -335,6 +329,14 @@ public class ActivityDrawer extends AppCompatActivity
         displayFragment(FragmentNutrients.newInstance(
                         (ArrayList<NutrientLocal>) recipe.getNutrients()),
                 getString(R.string.fragment_nutrients));
+    }
+
+    public List<ItemRecipe>  getSuggestionRecipes() {
+        return suggestions;
+    }
+
+    public void setSuggestionRecipes(List<ItemRecipe> suggestions) {
+        this.suggestions = suggestions;
     }
 
     /**
@@ -347,15 +349,28 @@ public class ActivityDrawer extends AppCompatActivity
             switch (intent.getAction()) {
                 case ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS :
                     Log.i(TAG, "onReceive: ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS ");
+                    ofTheDay = false;
                     recipes = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES);
-                    displayFragment(FragmentRecipes.newInstance((ArrayList<ItemRecipe>) ModelConverter.convertLocalRecipeToItemRecipe(recipes)),
+                    displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes),false),
                             getResources().getString(R.string.fragment_recipes));
+                    // TODO start activity do show list of recipes
                     break;
                 case ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS :
                     Log.i(TAG, "onReceive: ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS ");
+                    ofTheDay = true;
+                    ToastUtils.showToast(ActivityDrawer.this, Constants.CHECK_RANDOM_RECIPES);
+                    recipesOfTheDay = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM);
+//                    List<ItemRecipe> test = new ArrayList<>(1);
+//                    for (int i = 0; i < 10; i++) {
+//                        test.add(new ItemRecipe("dfdsdfsdfsd", "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg"));
+//                    }
+//                    setSuggestionRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay));
+                    displayFragment(FragmentRecipesViewer.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay)), mFragmentTags[0]);
                     break;
             }
-            progressDialog.dismiss();
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
         }
 
 

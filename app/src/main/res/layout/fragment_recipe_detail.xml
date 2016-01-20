@@ -10,6 +10,14 @@
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
         android:layout_height="200dp"/>
+    <RatingBar
+        android:id="@+id/rb_recipe_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/img_recipe_detail"
+        android:numStars="1"
+        android:stepSize="1.0"
+        android:rating="0.0" />
 
 
     <ImageView

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tae.letscook.R;
-import com.tae.letscook.model.IngredientLocal;
+import com.tae.letscook.model.ItemIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 public class AdapterIngredients extends RecyclerView.Adapter<AdapterIngredients.ViewHolder> {
 
     private Context context;
-    private List<IngredientLocal> ingredients;
+    private List<ItemIngredient> ingredients;
 
     public AdapterIngredients(Context context) {
         this.context = context;
@@ -48,7 +48,7 @@ public class AdapterIngredients extends RecyclerView.Adapter<AdapterIngredients.
         return ingredients.size();
     }
 
-    public void addIngredient(IngredientLocal ingredient) {
+    public void addIngredient(ItemIngredient ingredient) {
         ingredients.add(ingredient);
         notifyDataSetChanged();
     }
@@ -58,7 +58,7 @@ public class AdapterIngredients extends RecyclerView.Adapter<AdapterIngredients.
         notifyDataSetChanged();
     }
 
-    public List<IngredientLocal> getIngredients() {
+    public List<ItemIngredient> getIngredients() {
         return ingredients;
     }
 

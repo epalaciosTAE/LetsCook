@@ -33,7 +33,7 @@ import com.tae.letscook.adapter.AdapterIngredients;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.dialog.DialogFragmentAddIngredient;
 import com.tae.letscook.listeners.OnIngredientAddedListener;
-import com.tae.letscook.model.IngredientLocal;
+import com.tae.letscook.model.ItemIngredient;
 
 import java.io.File;
 
@@ -76,6 +76,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        getActivity().setTitle(getActivity().getString(R.string.fragment_add_recipe_title));
         title = getTitleRecipe();
         category = getCategoryRecipe();
         setItemTouchSimpleCallback();
@@ -182,7 +183,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
     @Override
     public void addIngredient(String ingredient, String amount) {
         Log.i(TAG, "ingredient: " + ingredient + " amount " + amount);
-        adapter.addIngredient(new IngredientLocal(ingredient, amount));
+        adapter.addIngredient(new ItemIngredient(ingredient, amount));
     }
 
     /**
