@@ -61,6 +61,9 @@
 
         <!--<service android:name="com.google.android.gms.analytics.CampaignTrackingService" />-->
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2f7096319d7be13cffb4a25d97f6fa5a41df2775" />
     </application>
 
 </manifest>
