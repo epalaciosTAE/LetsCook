@@ -30,6 +30,8 @@ import com.squareup.picasso.Picasso;
 import com.tae.letscook.R;
 import com.tae.letscook.Utils.PhotoUtils;
 import com.tae.letscook.adapter.AdapterIngredients;
+import com.tae.letscook.app.LetsCookApp;
+import com.tae.letscook.constants.AnalyticsConstants;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.dialog.DialogFragmentAddIngredient;
 import com.tae.letscook.listeners.OnIngredientAddedListener;
@@ -80,7 +82,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
         title = getTitleRecipe();
         category = getCategoryRecipe();
         setItemTouchSimpleCallback();
-
+        LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_add_recipe));
 
     }
 
@@ -100,6 +102,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 adapter.removeIngredient(viewHolder.getAdapterPosition());
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.REMOVE_INGREDIENT, AnalyticsConstants.ACTION_REMOVE, AnalyticsConstants.REMOVING_INGREDIENT);
             }
         };
     }
@@ -152,6 +155,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
         if (view.getId() == R.id.fab_add_ingredient) {
             Log.i("FragmentAddRecipe", "click");
             displayAddIngredientDialog();
+            LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_ADD_INGREDIENT, AnalyticsConstants.ACTION_ADD, AnalyticsConstants.ADD_INGREDIENT_LABEL);
         }
     }
 

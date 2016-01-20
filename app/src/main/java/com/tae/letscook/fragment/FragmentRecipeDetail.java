@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tae.letscook.R;
 import com.tae.letscook.adapter.AdapterOneItem;
+import com.tae.letscook.app.LetsCookApp;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.listeners.OnNutrientsListener;
 import com.tae.letscook.model.RecipeLocal;
@@ -61,6 +62,7 @@ public class FragmentRecipeDetail extends Fragment implements RatingBar.OnRating
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_recipe_detail));
         recipe = (RecipeLocal) getArguments().get(Constants.EXTRA_RECIPES);
     }
 

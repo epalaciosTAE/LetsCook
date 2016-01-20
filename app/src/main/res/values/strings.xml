@@ -41,6 +41,8 @@
     <string name="fragment_categories_title">Categories</string>
     <string name="fragment_nutrients_title">Nutrients</string>
     <string name="recipes_of_the_day">Recipes of the Day</string>
+    <string name="fragment_recipes_viewer">FragmentRecipesViewer</string>
+    <string name="fragment_suggestions">FragmentSuggestions</string>
 
 
 </resources>

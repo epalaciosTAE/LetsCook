@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.tae.letscook.api.LetsCookRestAdapter;
+import com.tae.letscook.app.LetsCookApp;
+import com.tae.letscook.constants.AnalyticsConstants;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.constants.ActionConstants;
 
@@ -36,9 +38,11 @@ public class LetsCookService extends IntentService {
         LetsCookRestAdapter restAdapter = new LetsCookRestAdapter(getApplicationContext());
         switch (intent.getAction()) {
             case ActionConstants.ACTION_RECIPES_BY_CATEGORY:
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_CATEGORY, AnalyticsConstants.ACTION_DOWNLOAD, AnalyticsConstants.CONNECTING);
                 restAdapter.getRecipesByCategory(intent.getStringExtra(Constants.EXTRA_CATEGORY));
                 break;
             case ActionConstants.ACTION_RECIPES_RANDOM:
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_RANDOM, AnalyticsConstants.ACTION_DOWNLOAD, AnalyticsConstants.CONNECTING);
                 restAdapter.getRecipesRandom();
                 break;
         }

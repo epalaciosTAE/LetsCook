@@ -31,7 +31,10 @@ import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.Utils;
 import com.tae.letscook.Utils.ModelConverter;
+import com.tae.letscook.Utils.NetworkUtils;
 import com.tae.letscook.Utils.ToastUtils;
+import com.tae.letscook.app.LetsCookApp;
+import com.tae.letscook.constants.AnalyticsConstants;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.Utils.DrawableUtils;
 import com.tae.letscook.R;
@@ -96,6 +99,7 @@ public class ActivityDrawer extends AppCompatActivity
 
         mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
+
 
     }
 
@@ -211,11 +215,14 @@ public class ActivityDrawer extends AppCompatActivity
         if (adapterId == Constants.ADAPTER_DRAWER_ID) { //display fragment in drawer
             mDrawerLayout.closeDrawer(GravityCompat.START);
             if (position == Constants.FRAGMENT_ADD_RECIPE_POSITION) { // before display add recipe fragment display dialog to get title
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_ADD_RECIPE, AnalyticsConstants.ACTION_SCREEN, AnalyticsConstants.ADD_RECIPE_LABEL);
                 DialogFragmentRecipeTitle.newInstance().show(
                         getSupportFragmentManager(),
                         getResources().getString(R.string.fragment_add_recipe));
-            } else if (position == Constants.FRAGMENT_RECIPE_PAGER_POSITION){
-                loadSuggestionRecipes();
+            } else if (position == Constants.FRAGMENT_RECIPE_PAGER_POSITION) {
+                if (NetworkUtils.isConnectionAvailable(this)) {
+                    loadSuggestionRecipes();
+                }
                 progressDialog.show();
             } else{
                 Log.i(TAG, "onItemClick: show fragment: " + mDrawerFragments.get(position).toString() + " tag: " + mFragmentTags[position -1]);
@@ -301,6 +308,8 @@ public class ActivityDrawer extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS);
         intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+
+
     }
 
     @Override

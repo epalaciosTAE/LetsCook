@@ -15,6 +15,7 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.tae.letscook.R;
 import com.tae.letscook.adapter.AdapterCategoriesMaterial;
 import com.tae.letscook.adapter.AdapterRecipes;
+import com.tae.letscook.app.LetsCookApp;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.model.ItemRecipe;
 
@@ -48,6 +49,7 @@ public class FragmentRecipes extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_recipes));
         recipes = (List<ItemRecipe>) getArguments().get(Constants.EXTRA_ITEM_RECIPES);
         boolean withTitle = (boolean) getArguments().get(Constants.EXTRA_TITLE);
 //        if (withTitle) {
