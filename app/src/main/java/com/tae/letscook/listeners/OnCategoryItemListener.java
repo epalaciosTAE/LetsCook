@@ -7,5 +7,5 @@ import android.view.View;
  */
 public interface OnCategoryItemListener {
 
-    public void onCategoryItemClick(View v, int position, String category);
+    public void onCategoryItemClick(View v, int position, String category, boolean iscategory);
 }

@@ -17,10 +17,10 @@
     </array>
 
     <array name="nav_drawer_fragment_tags">
+        <item name="fragment_recipes_pager">FragmentRecipesPager</item>
         <item name="fragment_add_recipe">FragmentAddRecipe</item>
-        <item name="fragment_recipes">FragmentRecipes</item>
-        <item name="fragment_favourites">FragmentFavourites</item>
         <item name="fragment_other_chefs">FragmentOtherChefs</item>
+        <item name="fragment_favourites">FragmentFavourites</item>
         <item name="fragment_events">FragmentEvents</item>
     </array>
 

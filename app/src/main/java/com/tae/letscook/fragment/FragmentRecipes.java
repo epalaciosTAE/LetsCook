@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.tae.letscook.R;
-import com.tae.letscook.adapter.AdapterRecipesMaterial;
+import com.tae.letscook.adapter.AdapterCategoriesMaterial;
+import com.tae.letscook.adapter.AdapterRecipes;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.model.ItemRecipe;
 
@@ -31,6 +32,10 @@ public class FragmentRecipes extends Fragment {
     @Bind(R.id.recycler_view) protected RecyclerView recyclerView;
     List<ItemRecipe> recipes;
 
+//    public static FragmentRecipes newInstance () {
+//        return new FragmentRecipes();
+//    }
+
     public static FragmentRecipes newInstance (ArrayList<ItemRecipe> recipes, boolean title) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(Constants.EXTRA_ITEM_RECIPES, recipes);
@@ -45,9 +50,9 @@ public class FragmentRecipes extends Fragment {
         super.onCreate(savedInstanceState);
         recipes = (List<ItemRecipe>) getArguments().get(Constants.EXTRA_ITEM_RECIPES);
         boolean withTitle = (boolean) getArguments().get(Constants.EXTRA_TITLE);
-        if (withTitle) {
-            getActivity().setTitle(getActivity().getString(R.string.recipes_of_the_day));
-        }
+//        if (withTitle) {
+//            getActivity().setTitle(getActivity().getString(R.string.recipes_of_the_day));
+//        }
     }
 
     @Nullable
@@ -58,9 +63,9 @@ public class FragmentRecipes extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        AdapterRecipes adapter = new AdapterRecipes(recipes, getActivity()); // TODO pass the list to adapter
-        Log.i("Fragment REcipes", "onCreateView: recipes size "+ recipes.size());
-        AdapterRecipesMaterial adapter = new AdapterRecipesMaterial(getActivity());
+        AdapterRecipes adapter = new AdapterRecipes(recipes, getActivity()); // TODO pass the list to adapter
+        Log.i("Fragment REcipes", "onCreateView: recipes size " + recipes.size());
+//        AdapterCategoriesMaterial adapter = new AdapterCategoriesMaterial(getActivity());
         recyclerView.setAdapter(adapter);
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
         return view;

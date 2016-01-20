@@ -8,6 +8,7 @@
     <!-- Fragment tags -->
     <string name="fragment_add_recipe">FragmentAddRecipe</string>
     <string name="fragment_recipes">FragmentRecipes</string>
+    <string name="fragment_recipes_detail">FragmentRecipesDetail</string>
     <string name="fragment_favourites">FragmentFavourites</string>
     <string name="fragment_other_chefs">FragmentOtherChefs</string>
     <string name="fragment_events">FragmentEvents</string>

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +17,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -26,9 +27,11 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.florent37.materialviewpager.Utils;
 import com.tae.letscook.Utils.ModelConverter;
-import com.tae.letscook.api.apiModel.Recipe;
+import com.tae.letscook.Utils.ToastUtils;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.Utils.DrawableUtils;
 import com.tae.letscook.R;
@@ -36,7 +39,6 @@ import com.tae.letscook.adapter.AdapterDrawer;
 import com.tae.letscook.constants.ActionConstants;
 import com.tae.letscook.dialog.DialogFragmentRecipeTitle;
 import com.tae.letscook.fragment.FragmentAddRecipe;
-import com.tae.letscook.fragment.FragmentCategories;
 import com.tae.letscook.fragment.FragmentEvents;
 import com.tae.letscook.fragment.FragmentFavourites;
 import com.tae.letscook.fragment.FragmentNutrients;
@@ -76,14 +78,15 @@ public class ActivityDrawer extends AppCompatActivity
     private LetsCookReceiver receiver;
     private ProgressDialog progressDialog;
     private List<RecipeLocal>recipes, recipesOfTheDay;
+    private List<ItemRecipe> suggestions;
     private boolean ofTheDay;
+//    private FragmentRecipesViewer fragmentRecipesViewer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         ButterKnife.bind(this);
-//        loadHomeRecipes();
         setSupportActionBar(mToolbar);
         setRecyclerView();
         setDrawerToggle();
@@ -94,11 +97,21 @@ public class ActivityDrawer extends AppCompatActivity
         mToolbar.setNavigationIcon(android.R.drawable.star_big_on); // this changes the burguer
 
         mDrawerFragments = getDrawerFragments();
+//        fragmentRecipesViewer = (FragmentRecipesViewer) mDrawerFragments.get(Constants.FRAGMENT_RECIPE_PAGER_POSITION);
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable()){ //FIXME Bug in real devices connecting with server
+            // DO WHAT YOU NEED TO DO ON THE NETWORK
+            Log.i(TAG, "onCreate: network is enable");
+//            downloadRecipesByCategory("Meat");
+        } else {
+            Log.i(TAG, "onCreate: network is not enable");
+        }
     }
 
-    private void loadHomeRecipes() {
+    private void loadSuggestionRecipes() {
         startService(LetsCookService.makeIntentHomeView(ActivityDrawer.this));
     }
 
@@ -109,6 +122,18 @@ public class ActivityDrawer extends AppCompatActivity
     private void initLetsCookReceiver() {
         receiver = new LetsCookReceiver();
     }
+
+//    private void setToolbar() {
+//        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        mToolbar.setTitle("");
+//        mToolbar.inflateMenu(R.menu.menu_main);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                drawerLayout.openDrawer(GravityCompat.START);
+//            }
+//        });
+//    }
 
     /**
      * Enable ripple effect in the logout option in the navigation drawer
@@ -210,7 +235,7 @@ public class ActivityDrawer extends AppCompatActivity
 //        Fragment currentFragment = null;
 //        String currentFragmentTag = null;
 //        switch (position) {
-//            case Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION:
+//            case Constants.FRAGMENT_RECIPE_PAGER_POSITION:
 //                currentFragment = FragmentRecipes.newInstance();
 //                currentFragmentTag = getResources().getString(R.string.fragment_recipes);
 //                break;
@@ -242,8 +267,14 @@ public class ActivityDrawer extends AppCompatActivity
                 DialogFragmentRecipeTitle.newInstance().show(
                         getSupportFragmentManager(),
                         getResources().getString(R.string.fragment_add_recipe));
-            }else {
-                displayFragment(mDrawerFragments.get(position), mFragmentTags[position]);
+            } else if (position == Constants.FRAGMENT_RECIPE_PAGER_POSITION){
+//                Log.i(TAG, "onItemClick: show fragment: " + mDrawerFragments.get(position).toString() + " tag: " + mFragmentTags[position -1]);
+                loadSuggestionRecipes();
+                progressDialog.show();
+            } else{
+                Log.i(TAG, "onItemClick: show fragment: " + mDrawerFragments.get(position).toString() + " tag: " + mFragmentTags[position -1]);
+                displayFragment(mDrawerFragments.get(position), mFragmentTags[position -1]);
+
             }
         }
     }
@@ -255,8 +286,8 @@ public class ActivityDrawer extends AppCompatActivity
     @NonNull
     private SparseArray<Fragment> getDrawerFragments() {
         mDrawerFragments = new SparseArray<>(Constants.DRAWER_ITEMS_SIZE);
-        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION, FragmentRecipesViewer.newInstance());
-//        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_CATEGORIES_POSITION, FragmentCategories.newInstance());
+//        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_PAGER_POSITION, FragmentRecipesViewer.newInstance());
+//        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_PAGER_POSITION, FragmentCategories.newInstance());
 //        mDrawerFragments.put(Constants.FRAGMENT_ADD_RECIPE_POSITION, FragmentAddRecipe.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_OTHER_CHEFS_POSITION, FragmentOtherChefs.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_FAVOURITES_POSITION, FragmentFavourites.newInstance());
@@ -291,7 +322,7 @@ public class ActivityDrawer extends AppCompatActivity
      * @param category
      */
     @Override
-    public void setTitle(String title, String category) {
+    public void showRecipes(String title, String category) {
         displayFragment(FragmentAddRecipe.newInstance(title, category), getResources().getString(R.string.fragment_add_recipe));
     }
 
@@ -302,16 +333,23 @@ public class ActivityDrawer extends AppCompatActivity
      * @param category
      */
     @Override
-    public void onCategoryItemClick(View v, int position, String category) { //Click in categories: display fragment recipes when click any item in fragment categories
-        Log.i("MAIN", "onItemClick: adapter categories  " + position);
+    public void onCategoryItemClick(View v, int position, String category, boolean isCategory) { //Click in categories: display fragment recipes when click any item in fragment categories
+        if (isCategory) {
+            Log.i("MAIN", "onItemClick: adapter categories  " + String.valueOf(position));
 //        categoryPosition = position;
-        downloadRecipesByCategory(category);
-        progressDialog.setMessage("Loading recipes");
-        progressDialog.show();
+            downloadRecipesByCategory(category);
+            progressDialog.setMessage("Loading recipes");
+            progressDialog.show();
+        } else { //is suggestion, is its a recipe--> detail
+            if (category.equals(recipesOfTheDay.get(position - 1).getLabel())) {
+                displayFragment(FragmentRecipeDetail.newInstance(recipesOfTheDay.get(position - 1)), getResources().getString(R.string.fragment_recipes_detail));
+            }
+        }
 
     }
 
     private void downloadRecipesByCategory(String category) {
+        Log.i(TAG, "downloadRecipesByCategory: starting service");
         startService(LetsCookService.makeIntentWithCategory(getApplicationContext(), category));
     }
 
@@ -351,6 +389,14 @@ public class ActivityDrawer extends AppCompatActivity
                 getString(R.string.fragment_nutrients));
     }
 
+    public List<ItemRecipe>  getSuggestionRecipes() {
+        return suggestions;
+    }
+
+    public void setSuggestionRecipes(List<ItemRecipe> suggestions) {
+        this.suggestions = suggestions;
+    }
+
     /**
      * Inner class to handle broadcast receivers (take it out if possible)
      */
@@ -365,16 +411,41 @@ public class ActivityDrawer extends AppCompatActivity
                     recipes = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES);
                     displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes),false),
                             getResources().getString(R.string.fragment_recipes));
+                    // TODO start activity do show list of recipes
                     break;
                 case ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS :
                     Log.i(TAG, "onReceive: ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS ");
                     ofTheDay = true;
+                    ToastUtils.showToast(ActivityDrawer.this, Constants.CHECK_RANDOM_RECIPES);
                     recipesOfTheDay = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM);
-                    displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay), true),
-                            getResources().getString(R.string.fragment_recipes));
+//                    List<ItemRecipe> test = new ArrayList<>(1);
+//                    for (int i = 0; i < 10; i++) {
+//                        test.add(new ItemRecipe("dfdsdfsdfsd", "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg"));
+//                    }
+//                    setSuggestionRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay));
+                    displayFragment(FragmentRecipesViewer.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay)), mFragmentTags[0]);
+//                    if (fragmentRecipesViewer == null) {
+//                        fragmentRecipesViewer = (FragmentRecipesViewer) mDrawerFragments.get(Constants.FRAGMENT_RECIPE_PAGER_POSITION);
+//                    }
+//                    fragmentRecipesViewer.updateSuggestions(test);
+//                    displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipesOfTheDay), true),
+//                            getResources().getString(R.string.fragment_recipes));
+                    // TODO update list of Suggestions viewpager
+//                    FragmentRecipesViewer fragmentRecipesViewer = (FragmentRecipesViewer) getSupportFragmentManager().findFragmentByTag(mFragmentTags[0]);
+
+//                    ToastUtils.showToast(getApplicationContext(), "Suggestions of the day loaded!");
+//                    if (fragmentRecipesViewer != null) {
+//                        Log.i(TAG, "onReceive: fragment pager  is alive? " + fragmentRecipesViewer.isVisible());
+////                        fragmentRecipesViewer.updateSuggestions(test);
+//                    } else {
+//                        Log.i(TAG, "onReceive: fragment pager is visible? NO" );
+//                    }
+
                     break;
             }
-            progressDialog.dismiss();
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
         }
 
 

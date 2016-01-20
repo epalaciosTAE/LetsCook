@@ -60,6 +60,8 @@ public class LetsCookRestAdapter {
             @Override
             public void failure(RetrofitError error) {
                 handleFailure(error);
+//                LocalBroadcastManager.getInstance(context)
+//                        .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS));
             }
         });
     }
@@ -82,6 +84,8 @@ public class LetsCookRestAdapter {
             @Override
             public void failure(RetrofitError error) {
                 handleFailure(error);
+                LocalBroadcastManager.getInstance(context)
+                        .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS));
             }
         });
     }

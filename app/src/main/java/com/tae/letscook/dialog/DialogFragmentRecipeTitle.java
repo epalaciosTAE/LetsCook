@@ -63,7 +63,7 @@ public class DialogFragmentRecipeTitle extends DialogFragment {
                 if (etTitle.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
                 } else {
-                    titleListener.setTitle(etTitle.getText().toString(), category);
+                    titleListener.showRecipes(etTitle.getText().toString(), category);
                 }
             }
         });
