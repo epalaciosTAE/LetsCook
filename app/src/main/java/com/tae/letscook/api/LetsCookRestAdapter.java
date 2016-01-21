@@ -13,6 +13,7 @@ import com.tae.letscook.api.apiModel.Recipe;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.constants.ServerConstants;
 import com.tae.letscook.constants.ActionConstants;
+import com.tae.letscook.model.Chef;
 
 import java.util.List;
 
@@ -76,13 +77,33 @@ public class LetsCookRestAdapter {
                 Log.i(TAG, "getRandomRecipes success: " + response.getStatus());
                 LocalBroadcastManager.getInstance(context)
                         .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS)
-                        .putParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM,
-                                ModelConverter.convertRecipeApiToLocalRecipe(recipes)));
+                                .putParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM,
+                                        ModelConverter.convertRecipeApiToLocalRecipe(recipes)));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                NetworkUtils.handleRestAdapterFailure(context,error);
+                NetworkUtils.handleRestAdapterFailure(context, error);
+            }
+        });
+    }
+
+    /**
+     * Send authCode to Server side and authorize the user
+     */
+    public void signIn(String authCode) {
+        Log.i(TAG, "signIn: authCode: " + authCode);
+        iLetsCookServer.authorizeUser(authCode, new Callback<Chef>() {
+            @Override
+            public void success(Chef chef, Response response) {
+                Log.i(TAG, "success: response "+ response.getStatus());
+                LocalBroadcastManager.getInstance(context)
+                        .sendBroadcast(new Intent(ActionConstants.ACTION_SIGN_IN_SUCCESS));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
             }
         });
     }

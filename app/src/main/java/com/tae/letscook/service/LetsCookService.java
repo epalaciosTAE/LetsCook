@@ -34,6 +34,13 @@ public class LetsCookService extends IntentService {
         return intent;
     }
 
+    public static Intent makeIntentLogin(Context context, String authCode) {
+        Intent intent = new Intent(context, LetsCookService.class);
+        intent.setAction(ActionConstants.ACTION_LOGIN);
+        intent.putExtra(Constants.EXTRA_AUTHCODE, authCode);
+        return intent;
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         LetsCookRestAdapter restAdapter = new LetsCookRestAdapter(getApplicationContext());
@@ -46,6 +53,9 @@ public class LetsCookService extends IntentService {
                 LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_RANDOM, AnalyticsConstants.ACTION_DOWNLOAD, AnalyticsConstants.CONNECTING);
                 restAdapter.getRecipesRandom();
                 break;
+            case ActionConstants.ACTION_LOGIN :
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_LOGIN, AnalyticsConstants.ACTION_LOGIN, AnalyticsConstants.CONNECTING);
+                restAdapter.signIn(intent.getStringExtra(Constants.EXTRA_AUTHCODE));
         }
     }
 }
