@@ -1,6 +1,7 @@
 package com.tae.letscook.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,11 +24,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tae.letscook.R;
+import com.tae.letscook.activity.ActivityDrawer;
 import com.tae.letscook.adapter.AdapterOneItem;
 import com.tae.letscook.app.LetsCookApp;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.listeners.OnNutrientsListener;
+import com.tae.letscook.listeners.OnTaskResponse;
 import com.tae.letscook.model.RecipeLocal;
+import com.tae.letscook.service.DeleteRecipeTask;
 import com.tae.letscook.service.SaveRecipeToFavsTask;
 
 import java.util.ArrayList;
@@ -40,7 +44,7 @@ import butterknife.OnClick;
 /**
  * Created by Eduardo on 16/01/2016.
  */
-public class FragmentRecipeDetail extends Fragment implements Animation.AnimationListener{
+public class FragmentRecipeDetail extends Fragment implements Animation.AnimationListener, OnTaskResponse{
 
     private static final String TAG = SaveRecipeToFavsTask.class.getSimpleName();
     @Bind(R.id.tv_recipe_detail_title) protected TextView tvTitle;
@@ -59,6 +63,8 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
     private RecipeLocal recipe;
     private Animation animation;
     private boolean isLiked;
+    private long rowId;
+    private OnTaskResponse taskResponse;
 
 
     public static FragmentRecipeDetail newInstance (RecipeLocal recipe) {
@@ -67,6 +73,12 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
         FragmentRecipeDetail fragment = new FragmentRecipeDetail();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        taskResponse = (OnTaskResponse) getActivity().getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_recipes_detail));
     }
 
     @Override
@@ -158,10 +170,13 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
             case R.id.fab_recipe_detail :
                 if (!isLiked) {
                     fabLike.startAnimation(animation);
-                    SaveRecipeToFavsTask saveTask = new SaveRecipeToFavsTask(getActivity());
+                    SaveRecipeToFavsTask saveTask = new SaveRecipeToFavsTask(getActivity(), taskResponse);
                     saveTask.execute(recipe);
                 } else {
-
+                    Log.i(TAG, "onClick: delete row id: " + rowId);
+                    fabLike.startAnimation(animation);
+                    DeleteRecipeTask deleteTask = new DeleteRecipeTask(getActivity());
+                    deleteTask.execute(rowId);
                 }
                 break;
             default :
@@ -194,7 +209,13 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        fabLike.setImageResource(R.drawable.ic_like_filled);
+        if (!isLiked) {
+            isLiked = true;
+            fabLike.setImageResource(R.drawable.ic_like_filled);
+        } else {
+            isLiked = false;
+            fabLike.setImageResource(R.drawable.ic_like);
+        }
         fabLike.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
     }
 
@@ -203,7 +224,21 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
 
     }
 
-//    /**
+    @Override
+    public void onResponse(long rowId) {
+        this.rowId = rowId;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        taskResponse = null;
+    }
+
+
+
+
+    //    /**
 //     * Rating star starts an asynctask to save the recipe in data base
 //     * @param ratingBar
 //     * @param rating
