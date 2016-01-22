@@ -51,6 +51,9 @@
     <string name="signed_out">Signed out</string>
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
+
+    <!-- Facebook sign in-->
+    <string name="facebook_app_id">980220225405108</string>
     <!-- Sign-in status messages -->
     <string name="signed_in_fmt">Signed in as: %s</string>
     <string name="auth_code_fmt">Auth Code: %s</string>
@@ -58,4 +61,5 @@
     <string name="login">Login</string>
     <string name="server_client_id">604841599359-1sbc1hn16c1i7csrrgntjh03lv6g7r6a.apps.googleusercontent.com</string>
     <string name="server_client_secret">10DDoxMWSpU43gVkzFX5oh6p</string>
+    <string name="facebook_sign_in">Sign Up with Facebook</string>
 </resources>

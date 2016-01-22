@@ -54,7 +54,7 @@ public class LetsCookService extends IntentService {
                 restAdapter.getRecipesRandom();
                 break;
             case ActionConstants.ACTION_LOGIN :
-                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_LOGIN, AnalyticsConstants.ACTION_LOGIN, AnalyticsConstants.CONNECTING);
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_LOGIN_GOOGLE, AnalyticsConstants.ACTION_LOGIN_GOOGLE, AnalyticsConstants.CONNECTING);
                 restAdapter.signIn(intent.getStringExtra(Constants.EXTRA_AUTHCODE));
         }
     }

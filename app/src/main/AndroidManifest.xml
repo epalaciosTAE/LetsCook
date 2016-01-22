@@ -17,6 +17,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--Meta data need it for facebook-->
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <!-- meta-data for Fabric-->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2f7096319d7be13cffb4a25d97f6fa5a41df2775" />
         <activity
             android:name=".activity.ActivityDrawer"
             android:label="@string/app_name"
@@ -24,12 +30,23 @@
         </activity>
 
         <activity android:name=".activity.ActivityLogin"
-            android:label="@string/login">
+            android:label="@string/login"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.ActivitySplash"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+
+        <!--Facebook Activity-->
+        <activity android:name="com.facebook.FacebookActivity"
+                  android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:label="@string/app_name"/>
+
 
         <service android:name=".service.LetsCookService"/>
 
@@ -46,10 +63,15 @@
             <!--</intent-filter>-->
         <!--</receiver>-->
 
-        <!--<service-->
-            <!--android:name="com.google.android.gms.analytics.AnalyticsService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="false" />-->
+        <!-- Facebook provider-->
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1234"
+                  android:name="com.facebook.FacebookContentProvider"
+                  android:exported="true" />
+
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
 
         <!--&lt;!&ndash;-->
              <!--Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable-->
@@ -65,9 +87,7 @@
 
         <!--<service android:name="com.google.android.gms.analytics.CampaignTrackingService" />-->
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="2f7096319d7be13cffb4a25d97f6fa5a41df2775" />
+
     </application>
 
 </manifest>
