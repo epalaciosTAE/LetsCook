@@ -62,4 +62,8 @@
     <string name="server_client_id">604841599359-1sbc1hn16c1i7csrrgntjh03lv6g7r6a.apps.googleusercontent.com</string>
     <string name="server_client_secret">10DDoxMWSpU43gVkzFX5oh6p</string>
     <string name="facebook_sign_in">Sign Up with Facebook</string>
+    <string name="facebook_id">id</string>
+    <string name="facebook_name">name</string>
+    <string name="facebook_email">email</string>
+    <string name="facebook_picture">picture</string>
 </resources>

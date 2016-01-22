@@ -34,16 +34,17 @@ public class Constants {
     public static final String EXTRA_TITLE = "extra_title";
     public static final String EXTRA_RECIPES_RANDOM = "extra_recipes_random";
     public static final String EXTRA_SUGGESTIONS = "extra_suggestions";
+    public static final String EXTRA_CHEF = "extra_chef";
+
     public static final String EXTRA_AUTHCODE = "extra_auth_code";
-
     public static final String EXTRA_NUTRIENTS = "extra_nutrients";
-    public static final String ARGS_CATEGORY_ID = "args_category_id";
 
+    public static final String ARGS_CATEGORY_ID = "args_category_id";
     public static final String ARGS_RECIPE_TITLE= "args_recipe_title";
     public static final String ARGS_RECIPE_CATEGORY= "args_recipe_category";
     public static final String RECIPE = "Recipe: ";
-    public static final int PERMISSIONS_REQUEST_CAMERA = 101;
 
+    public static final int PERMISSIONS_REQUEST_CAMERA = 101;
     public static final int PERMISSIONS_REQUEST_WRITE_STORAGE = 102;
     public static final String CAMERA_IMAGES_FOLDER = "LetsCook";
     public static final int REQUEST_CAMERA_IMAGE = 201;
@@ -54,8 +55,8 @@ public class Constants {
     public static final String CARB = "Low-Carb";
     public static final String FAT = "Low-Fat";
     public static final String SODIUM = "Low-Sodium";
-    public static final String BALANCED = "Balanced";
 
+    public static final String BALANCED = "Balanced";
     public static final CharSequence VIEW_PAGER_WORLD_FOOD = "World Food";
     public static final CharSequence VIEW_PAGER_SUGGESTIONS = "Suggestions";
     public static final int FADE_IN = 0;

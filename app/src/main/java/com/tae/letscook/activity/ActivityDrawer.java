@@ -101,7 +101,7 @@ public class ActivityDrawer extends AppCompatActivity
         mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
-
+        Log.i(TAG, "onCreate: Chef data " + getIntent().getParcelableExtra(Constants.EXTRA_CHEF) );
     }
 
     private void loadSuggestionRecipes() {

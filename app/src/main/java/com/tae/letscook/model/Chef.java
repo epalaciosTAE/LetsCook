@@ -1,61 +1,53 @@
 package com.tae.letscook.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by Eduardo on 29/12/2015.
  */
-public class Chef {
+public class Chef implements Parcelable{
 
     private String name;
     private String email;
-    private String userId; // Use this value as a key to identify a user.
-    private boolean emailVerified;
-    private String pictureUrl;
-    private String locale;
-    private String familyName;
-    private String givenName;
+    private String picture;
 
-    public Chef(String name, String email, String userId, boolean emailVerified, String pictureUrl, String locale, String familyName, String givenName) {
+    public Chef(String name, String email, String picture) {
         this.name = name;
         this.email = email;
-        this.userId = userId;
-        this.emailVerified = emailVerified;
-        this.pictureUrl = pictureUrl;
-        this.locale = locale;
-        this.familyName = familyName;
-        this.givenName = givenName;
+        this.picture = picture;
     }
 
-    public String getName() {
-        return name;
+
+    protected Chef(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        picture = in.readString();
     }
 
-    public String getEmail() {
-        return email;
+    public static final Creator<Chef> CREATOR = new Creator<Chef>() {
+        @Override
+        public Chef createFromParcel(Parcel in) {
+            return new Chef(in);
+        }
+
+        @Override
+        public Chef[] newArray(int size) {
+            return new Chef[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public boolean isEmailVerified() {
-        return emailVerified;
-    }
-
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public String getLocale() {
-        return locale;
-    }
-
-    public String getFamilyName() {
-        return familyName;
-    }
-
-    public String getGivenName() {
-        return givenName;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(picture);
     }
 }
