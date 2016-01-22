@@ -6,12 +6,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.tae.letscook.Utils.ModelConverter;
+import com.tae.letscook.Utils.NetworkUtils;
 import com.tae.letscook.Utils.ToastUtils;
 import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.constants.ServerConstants;
 import com.tae.letscook.constants.ActionConstants;
+import com.tae.letscook.model.Chef;
 
 import java.util.List;
 
@@ -53,15 +55,13 @@ public class LetsCookRestAdapter {
                 Log.i(TAG, "getRecipesByCategory success: response " + response.getStatus());
                 LocalBroadcastManager.getInstance(context)
                         .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS)
-                        .putParcelableArrayListExtra(Constants.EXTRA_RECIPES,
-                                ModelConverter.convertApiModelToLocalRecipes(hits)));
+                                .putParcelableArrayListExtra(Constants.EXTRA_RECIPES,
+                                        ModelConverter.convertApiModelToLocalRecipes(hits)));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                handleFailure(error);
-//                LocalBroadcastManager.getInstance(context)
-//                        .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS));
+                NetworkUtils.handleRestAdapterFailure(context,error);
             }
         });
     }
@@ -77,27 +77,36 @@ public class LetsCookRestAdapter {
                 Log.i(TAG, "getRandomRecipes success: " + response.getStatus());
                 LocalBroadcastManager.getInstance(context)
                         .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS)
-                        .putParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM,
-                                ModelConverter.convertRecipeApiToLocalRecipe(recipes)));
+                                .putParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM,
+                                        ModelConverter.convertRecipeApiToLocalRecipe(recipes)));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                handleFailure(error);
+                NetworkUtils.handleRestAdapterFailure(context, error);
             }
         });
     }
 
-    private void handleFailure(RetrofitError error) {
-        if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-            ToastUtils.showToastErrorInRetrofit(context, "Http error: ", error);
-        } else if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-            ToastUtils.showToastErrorInRetrofit(context, "Network error: ", error);
-        } else if (error.getKind().equals(RetrofitError.Kind.CONVERSION)) {
-            ToastUtils.showToastErrorInRetrofit(context, "Conversion error: ", error);
-        } else {
-            ToastUtils.showToastErrorInRetrofit(context, "Unknown error: ", error);
-        }
+    /**
+     * Send authCode to Server side and authorize the user
+     */
+    public void signIn(String authCode) {
+        Log.i(TAG, "signIn: authCode: " + authCode);
+        iLetsCookServer.authorizeUser(authCode, new Callback<Chef>() {
+            @Override
+            public void success(Chef chef, Response response) {
+                Log.i(TAG, "success: response "+ response.getStatus());
+                LocalBroadcastManager.getInstance(context)
+                        .sendBroadcast(new Intent(ActionConstants.ACTION_SIGN_IN_SUCCESS));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
+
 
 }

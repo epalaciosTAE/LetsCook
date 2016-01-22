@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tae.letscook.R;
+import com.tae.letscook.app.LetsCookApp;
 
 /**
  * Created by Eduardo on 30/12/2015.
@@ -21,6 +22,7 @@ public class FragmentOtherChefs extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_other_chefs));
     }
 
     @Nullable

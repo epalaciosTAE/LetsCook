@@ -18,6 +18,7 @@ import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapte
 import com.tae.letscook.R;
 import com.tae.letscook.Utils.Animations;
 import com.tae.letscook.adapter.AdapterCategoriesMaterial;
+import com.tae.letscook.app.LetsCookApp;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.listeners.HidingScrollListener;
 
@@ -51,7 +52,7 @@ public class FragmentCategories extends Fragment {
         Log.i(TAG, "onCreate: ");
         mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         loadAnimations();
-
+        LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_categories_title));
     }
 
     private void loadAnimations() {

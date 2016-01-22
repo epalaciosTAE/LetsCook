@@ -26,7 +26,7 @@
     <string name="spinner_budget">Choose Budget</string>
 
 
-    <string name="dialog_ok">Ok</string>
+    <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="tv_add_image">Add image</string>
     <string name="tv_add_ingredients">Ingredient</string>
@@ -41,6 +41,21 @@
     <string name="fragment_categories_title">Categories</string>
     <string name="fragment_nutrients_title">Nutrients</string>
     <string name="recipes_of_the_day">Recipes of the Day</string>
+    <string name="fragment_recipes_viewer">FragmentRecipesViewer</string>
+    <string name="fragment_suggestions">FragmentSuggestions</string>
 
 
+    <!-- Google Sign In-->
+    <string name="desc_google_icon">Google Logo</string>
+    <string name="google_sign_in">Sign Up with Google</string>
+    <string name="signed_out">Signed out</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="disconnect">Disconnect</string>
+    <!-- Sign-in status messages -->
+    <string name="signed_in_fmt">Signed in as: %s</string>
+    <string name="auth_code_fmt">Auth Code: %s</string>
+    <string name="loading">Loading…</string>
+    <string name="login">Login</string>
+    <string name="server_client_id">604841599359-1sbc1hn16c1i7csrrgntjh03lv6g7r6a.apps.googleusercontent.com</string>
+    <string name="server_client_secret">10DDoxMWSpU43gVkzFX5oh6p</string>
 </resources>

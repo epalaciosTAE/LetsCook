@@ -10,4 +10,6 @@ public class ActionConstants {
     public static final String ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS = "com.tae.letscook.DOWNLOAD_BY_CATEGORY_SUCCESS";
     public static final String ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS = "com.tae.letscook.DOWNLOAD_RECIPES_RANDOM_SUCCESS";
 
+    public static final String ACTION_LOGIN = "com.tae.letscook.LOGIN";
+    public static final String ACTION_SIGN_IN_SUCCESS = "com.tae.letscook.SIGN_IN_SUCCESS";
 }

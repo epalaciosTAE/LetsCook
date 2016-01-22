@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.tae.letscook.R;
 import com.tae.letscook.activity.ActivityDrawer;
 import com.tae.letscook.adapter.AdapterNutrients;
+import com.tae.letscook.app.LetsCookApp;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.model.NutrientLocal;
 
@@ -42,6 +43,7 @@ public class FragmentNutrients extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_nutrients));
 //        getActivity().setTitle(getActivity().getString(R.string.fragment_nutrients_title));
 //        nutriens = (List<NutrientLocal>) getArguments().get(Constants.EXTRA_NUTRIENTS);
     }

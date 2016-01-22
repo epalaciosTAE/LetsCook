@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.tae.letscook.api.LetsCookRestAdapter;
+import com.tae.letscook.app.LetsCookApp;
+import com.tae.letscook.constants.AnalyticsConstants;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.constants.ActionConstants;
 
@@ -25,9 +27,17 @@ public class LetsCookService extends IntentService {
         intent.putExtra(Constants.EXTRA_CATEGORY, category);
         return intent;
     }
+
     public static Intent makeIntentHomeView(Context context) {
         Intent intent = new Intent(context, LetsCookService.class);
         intent.setAction(ActionConstants.ACTION_RECIPES_RANDOM);
+        return intent;
+    }
+
+    public static Intent makeIntentLogin(Context context, String authCode) {
+        Intent intent = new Intent(context, LetsCookService.class);
+        intent.setAction(ActionConstants.ACTION_LOGIN);
+        intent.putExtra(Constants.EXTRA_AUTHCODE, authCode);
         return intent;
     }
 
@@ -36,11 +46,16 @@ public class LetsCookService extends IntentService {
         LetsCookRestAdapter restAdapter = new LetsCookRestAdapter(getApplicationContext());
         switch (intent.getAction()) {
             case ActionConstants.ACTION_RECIPES_BY_CATEGORY:
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_CATEGORY, AnalyticsConstants.ACTION_DOWNLOAD, AnalyticsConstants.CONNECTING);
                 restAdapter.getRecipesByCategory(intent.getStringExtra(Constants.EXTRA_CATEGORY));
                 break;
             case ActionConstants.ACTION_RECIPES_RANDOM:
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_RANDOM, AnalyticsConstants.ACTION_DOWNLOAD, AnalyticsConstants.CONNECTING);
                 restAdapter.getRecipesRandom();
                 break;
+            case ActionConstants.ACTION_LOGIN :
+                LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_LOGIN, AnalyticsConstants.ACTION_LOGIN, AnalyticsConstants.CONNECTING);
+                restAdapter.signIn(intent.getStringExtra(Constants.EXTRA_AUTHCODE));
         }
     }
 }
