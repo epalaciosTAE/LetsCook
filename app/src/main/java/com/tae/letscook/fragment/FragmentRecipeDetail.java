@@ -44,7 +44,7 @@ import butterknife.OnClick;
 /**
  * Created by Eduardo on 16/01/2016.
  */
-public class FragmentRecipeDetail extends Fragment implements Animation.AnimationListener, OnTaskResponse{
+public class FragmentRecipeDetail extends Fragment implements Animation.AnimationListener{
 
     private static final String TAG = SaveRecipeToFavsTask.class.getSimpleName();
     @Bind(R.id.tv_recipe_detail_title) protected TextView tvTitle;
@@ -60,16 +60,17 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
     @Bind(R.id.fab_recipe_detail) protected FloatingActionButton fabLike;
 //    private ProgressDialog progressDialog;
     private OnNutrientsListener onNutrientsListener;
+    private OnTaskResponse taskResponse;
     private RecipeLocal recipe;
     private Animation animation;
     private boolean isLiked;
     private long rowId;
-    private OnTaskResponse taskResponse;
 
 
-    public static FragmentRecipeDetail newInstance (RecipeLocal recipe) {
+    public static FragmentRecipeDetail newInstance (RecipeLocal recipe, int fragmentId) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.EXTRA_RECIPES, recipe);
+        bundle.putInt(Constants.EXTRA_FRAGMENT_ID, fragmentId);
         FragmentRecipeDetail fragment = new FragmentRecipeDetail();
         fragment.setArguments(bundle);
         return fragment;
@@ -78,16 +79,18 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        taskResponse = (OnTaskResponse) getActivity().getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_recipes_detail));
+        taskResponse = (OnTaskResponse) getActivity();
+
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_recipe_detail));
+        LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_recipes_detail));
         recipe = (RecipeLocal) getArguments().get(Constants.EXTRA_RECIPES);
         animation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out);
         animation.setAnimationListener(this);
+        rowId = -1;
     }
 
     @Nullable
@@ -224,8 +227,12 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
 
     }
 
-    @Override
-    public void onResponse(long rowId) {
+//    @Override
+//    public void onResponse(long rowId) {
+//        this.rowId = rowId;
+//    }
+
+    public void setRowId(long rowId) {
         this.rowId = rowId;
     }
 
@@ -235,21 +242,4 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
         taskResponse = null;
     }
 
-
-
-
-    //    /**
-//     * Rating star starts an asynctask to save the recipe in data base
-//     * @param ratingBar
-//     * @param rating
-//     * @param fromUser
-//     */
-//    @Override
-//    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-//        Log.i(TAG, "onRatingChanged: rating: " + rating);
-//        if (rating > 0) {
-//            SaveRecipeToFavsTask saveTask = new SaveRecipeToFavsTask(getActivity());
-//            saveTask.execute(recipe);
-//        }
-//    }
 }

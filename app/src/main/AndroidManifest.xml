@@ -39,6 +39,8 @@
         </activity>
 
         <activity android:name=".activity.ActivitySplash"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait"
                   android:theme="@style/AppTheme.NoActionBar"/>
 
         <!--Facebook Activity-->

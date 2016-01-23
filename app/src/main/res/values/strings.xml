@@ -35,7 +35,6 @@
     <string name="dialog_add">Add</string>
     <string name="tv_add_ingredients_amount">Amount</string>
     <string name="menu_camera">Take Picture</string>
-    <string name="fragment_recipe_detail">FragmentRecipeDetail</string>
     <string name="fragment_nutrients">FragmentNutrients</string>
     <string name="fragment_add_recipe_title">New Recipe</string>
     <string name="fragment_categories_title">Categories</string>
