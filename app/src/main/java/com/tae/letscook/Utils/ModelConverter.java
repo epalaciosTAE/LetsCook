@@ -2,12 +2,18 @@ package com.tae.letscook.Utils;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.tae.letscook.api.apiModel.Digest;
 import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
 import com.tae.letscook.model.ItemRecipe;
 import com.tae.letscook.model.NutrientLocal;
 import com.tae.letscook.model.RecipeLocal;
+import com.tae.letscook.model.facebook.FacebookUser;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,5 +61,12 @@ public class ModelConverter {
 
         }
         return (ArrayList<RecipeLocal>) recipeLocals;
+    }
+
+    public static FacebookUser convertFacebookModelToChef(JSONObject object) {
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(object.toString());
+        Gson gson = new Gson();
+        return gson.fromJson(element, FacebookUser.class);
     }
 }

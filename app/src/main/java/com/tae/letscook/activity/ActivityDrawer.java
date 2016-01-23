@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.github.florent37.materialviewpager.Utils;
 import com.tae.letscook.Utils.ModelConverter;
 import com.tae.letscook.Utils.NetworkUtils;
@@ -100,7 +101,7 @@ public class ActivityDrawer extends AppCompatActivity
         mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
-
+        Log.i(TAG, "onCreate: Chef data " + getIntent().getParcelableExtra(Constants.EXTRA_CHEF) );
     }
 
     private void loadSuggestionRecipes() {
@@ -308,14 +309,31 @@ public class ActivityDrawer extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS);
         intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+        initFacebookAppEventsLogger();
 
 
+    }
+
+    /**
+     * Logs 'install' and 'app activate' App Events.
+     * data reflected in your app's Insights dashboard.
+     */
+    private void initFacebookAppEventsLogger() {
+        AppEventsLogger.activateApp(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        stopFacebookEventLogger();
+    }
+
+    /**
+     * Stop Facebook event logger
+     */
+    private void stopFacebookEventLogger() {
+        AppEventsLogger.deactivateApp(this);
     }
 
     /**

@@ -14,6 +14,7 @@ import com.tae.letscook.constants.Constants;
 import com.tae.letscook.constants.ServerConstants;
 import com.tae.letscook.constants.ActionConstants;
 import com.tae.letscook.model.Chef;
+import com.tae.letscook.model.google.GoogleUser;
 
 import java.util.List;
 
@@ -93,12 +94,16 @@ public class LetsCookRestAdapter {
      */
     public void signIn(String authCode) {
         Log.i(TAG, "signIn: authCode: " + authCode);
-        iLetsCookServer.authorizeUser(authCode, new Callback<Chef>() {
+        iLetsCookServer.authorizeUser(authCode, new Callback<GoogleUser>() {
             @Override
-            public void success(Chef chef, Response response) {
+            public void success(GoogleUser googleUser, Response response) {
                 Log.i(TAG, "success: response "+ response.getStatus());
                 LocalBroadcastManager.getInstance(context)
-                        .sendBroadcast(new Intent(ActionConstants.ACTION_SIGN_IN_SUCCESS));
+                        .sendBroadcast(new Intent(ActionConstants.ACTION_SIGN_IN_SUCCESS)
+                                .putExtra(Constants.EXTRA_CHEF, new Chef(
+                                        googleUser.getName(),
+                                        googleUser.getEmail(),
+                                        googleUser.getPictureUrl())));
             }
 
             @Override

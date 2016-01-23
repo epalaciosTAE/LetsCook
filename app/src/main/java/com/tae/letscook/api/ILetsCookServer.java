@@ -4,6 +4,7 @@ import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
 import com.tae.letscook.constants.ServerConstants;
 import com.tae.letscook.model.Chef;
+import com.tae.letscook.model.google.GoogleUser;
 
 import java.util.List;
 
@@ -28,6 +29,6 @@ public interface ILetsCookServer {
 
     @POST(ServerConstants.SIGN_IN)
     @FormUrlEncoded
-    public void authorizeUser(@Field("authcode") String authCode, Callback<Chef> response);
+    public void authorizeUser(@Field("authcode") String authCode, Callback<GoogleUser> response);
 }
 
