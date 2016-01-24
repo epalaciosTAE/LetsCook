@@ -245,7 +245,7 @@ public class ActivityDrawer extends AppCompatActivity
 //        mDrawerFragments.put(Constants.FRAGMENT_RECIPE_PAGER_POSITION, FragmentCategories.newInstance());
 //        mDrawerFragments.put(Constants.FRAGMENT_ADD_RECIPE_POSITION, FragmentAddRecipe.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_OTHER_CHEFS_POSITION, FragmentOtherChefs.newInstance());
-        mDrawerFragments.put(Constants.FRAGMENT_FAVOURITES_POSITION, FragmentRecipes.newInstance((ArrayList<ItemRecipe>) itemRecipes, false));
+        mDrawerFragments.put(Constants.FRAGMENT_FAVOURITES_POSITION, FragmentRecipes.newInstance((ArrayList<ItemRecipe>) itemRecipes, true));
         mDrawerFragments.put(Constants.FRAGMENT_EVENTS_POSITION, FragmentEvents.newInstance());
         return mDrawerFragments;
     }
@@ -350,7 +350,7 @@ public class ActivityDrawer extends AppCompatActivity
         if (ofTheDay) {
             displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position),Constants.FRAGMENT_PAGER),getString(R.string.fragment_recipes_detail));
         } else if (isFragmentFavourites) {
-            displayFragment(FragmentRecipeDetail.newInstance(recipesSQLite.get(position), Constants.FRAGMENT_PAGER), getString(R.string.fragment_recipes_detail));
+            displayFragment(FragmentRecipeDetail.newInstance(recipesSQLite.get(position), Constants.FRAGMENT_FAVOURITES), getString(R.string.fragment_recipes_detail));
         } else {
             displayFragment(FragmentRecipeDetail.newInstance(recipes.get(position), Constants.FRAGMENT_PAGER), getString(R.string.fragment_recipes_detail));
         }

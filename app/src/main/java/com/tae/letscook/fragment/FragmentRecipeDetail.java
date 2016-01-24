@@ -98,6 +98,10 @@ public class FragmentRecipeDetail extends Fragment implements Animation.Animatio
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, view);
+        if (getArguments().getInt(Constants.EXTRA_FRAGMENT_ID) == Constants.FRAGMENT_FAVOURITES) {
+            fabLike.setEnabled(false);
+            fabLike.setVisibility(View.GONE);
+        }
         onNutrientsListener = (OnNutrientsListener) getActivity();
         tvTitle.setText(recipe.getLabel());
         Picasso.with(getActivity()).load(recipe.getImageUrl()).resize(600, 300).centerCrop().into(img);
