@@ -50,6 +50,7 @@ import com.tae.letscook.listeners.OnItemClickListener;
 import com.tae.letscook.listeners.OnNutrientsListener;
 import com.tae.letscook.listeners.OnRecipeItemListener;
 import com.tae.letscook.listeners.OnRecipeTitleListener;
+import com.tae.letscook.listeners.OnRecipesLoadedListener;
 import com.tae.letscook.listeners.OnTaskResponse;
 import com.tae.letscook.model.Item;
 import com.tae.letscook.model.ItemRecipe;
@@ -65,7 +66,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ActivityDrawer extends AppCompatActivity
-        implements OnItemClickListener, OnRecipeTitleListener, OnCategoryItemListener, OnRecipeItemListener, OnNutrientsListener, OnTaskResponse{
+        implements OnItemClickListener, OnRecipeTitleListener, OnCategoryItemListener,
+        OnRecipeItemListener, OnNutrientsListener, OnTaskResponse{
 
     private static final String TAG = ActivityDrawer.class.getSimpleName();
     @Bind(R.id.toolbar) protected Toolbar mToolbar;
@@ -311,6 +313,7 @@ public class ActivityDrawer extends AppCompatActivity
         super.onResume();
         IntentFilter intentFilter = new IntentFilter(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS);
         intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS);
+        intentFilter.addAction(ActionConstants.ACTION_UPDATE_SQLITE_RECIPES);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
         initFacebookAppEventsLogger();
 
@@ -379,6 +382,16 @@ public class ActivityDrawer extends AppCompatActivity
         fragmentRecipeDetail.setRowId(rowId);
     }
 
+//    @Override
+//    public void recipesLoaded(List<RecipeLocal> recipes) {
+//        recipesSQLite = recipes;
+//        FragmentRecipes fragmentRecipes = (FragmentRecipes) getSupportFragmentManager()
+//                .findFragmentByTag(getResources().getString(R.string.fragment_recipes));
+//        fragmentRecipes.setRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesSQLite));
+//        fragmentRecipes.updateRecipes();
+//        fragmentRecipes.stopSwipeRefresh();
+//    }
+
     /**
      * Inner class to handle broadcast receivers (take it out if possible)
      */
@@ -406,6 +419,14 @@ public class ActivityDrawer extends AppCompatActivity
 //                        test.add(new ItemRecipe("dfdsdfsdfsd", "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg"));
 //                    }
                     displayFragment(FragmentRecipesViewer.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(suggestionsOfTheDay)), mFragmentTags[0]);
+                    break;
+                case ActionConstants.ACTION_UPDATE_SQLITE_RECIPES :
+                    recipesSQLite = intent.getParcelableArrayListExtra(Constants.EXTRA_SQLITE_RECIPES);
+                    FragmentRecipes fragmentRecipes = (FragmentRecipes) getSupportFragmentManager()
+                            .findFragmentByTag(getResources().getString(R.string.fragment_favourites));
+                    fragmentRecipes.setRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesSQLite));
+                    fragmentRecipes.updateRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesSQLite));
+                    fragmentRecipes.stopSwipeRefresh();
                     break;
             }
             if (progressDialog != null) {

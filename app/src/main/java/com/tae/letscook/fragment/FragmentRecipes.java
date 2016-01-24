@@ -1,5 +1,6 @@
 package com.tae.letscook.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,12 +16,14 @@ import android.view.ViewGroup;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.tae.letscook.R;
 import com.tae.letscook.Utils.ToastUtils;
+import com.tae.letscook.activity.ActivityDrawer;
 import com.tae.letscook.activity.ActivitySplash;
 import com.tae.letscook.adapter.AdapterCategoriesMaterial;
 import com.tae.letscook.adapter.AdapterRecipes;
 import com.tae.letscook.app.LetsCookApp;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.listeners.OnRecipesLoadedListener;
+import com.tae.letscook.listeners.OnUpdateRecipesListener;
 import com.tae.letscook.manager.DaoManager;
 import com.tae.letscook.manager.RecipesManager;
 import com.tae.letscook.model.ItemRecipe;
@@ -35,7 +38,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Eduardo on 30/12/2015.
  */
-public class FragmentRecipes extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnRecipesLoadedListener {
+public class FragmentRecipes extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.recycler_view) protected RecyclerView recyclerView;
     @Bind(R.id.swipe_container) protected SwipeRefreshLayout swipeRefreshLayout;
@@ -54,6 +57,7 @@ public class FragmentRecipes extends Fragment implements SwipeRefreshLayout.OnRe
         fragment.setArguments(bundle);
         return fragment;
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +100,11 @@ public class FragmentRecipes extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
@@ -104,14 +113,35 @@ public class FragmentRecipes extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh() {
         ToastUtils.showToast(getActivity(), "On refresh");
-        new LoadRecipesSQLiteTask(this, getActivity()).execute();
+        new LoadRecipesSQLiteTask(getActivity()).execute();
     }
 
-    @Override
-    public void recipesLoaded(List<ItemRecipe> recipes) {
+    public void updateRecipes(List<ItemRecipe> recipes) {
+        adapter.update(recipes);
+    }
+
+    public List<ItemRecipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<ItemRecipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    public void stopSwipeRefresh() {
         if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
-        adapter.update(recipes);
+
     }
+//
+//
+//    @Override
+//    public void recipesLoaded(List<ItemRecipe> recipes) {
+//        onUpdateRecipesListener.updateRecipes(recipes);
+//        if (swipeRefreshLayout.isRefreshing()) {
+//            swipeRefreshLayout.setRefreshing(false);
+//        }
+//        adapter.update(recipes);
+//    }
 }
