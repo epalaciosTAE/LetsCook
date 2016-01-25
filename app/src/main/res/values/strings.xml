@@ -50,7 +50,8 @@
     <string name="signed_out">Signed out</string>
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
-
+    <!--Google Api key-->
+    <string name="google_key">AIzaSyDSO9Az-CcMYbSnqzRN8Cb3aw-no7skl68</string>
     <!-- Facebook sign in-->
     <string name="facebook_app_id">980220225405108</string>
     <!-- Sign-in status messages -->
@@ -65,4 +66,6 @@
     <string name="facebook_name">name</string>
     <string name="facebook_email">email</string>
     <string name="facebook_picture">picture</string>
+    <string name="et_hint_event_title">Event title</string>
+    <string name="et_hint_event_address">Address</string>
 </resources>

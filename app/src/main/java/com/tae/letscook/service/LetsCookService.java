@@ -34,6 +34,13 @@ public class LetsCookService extends IntentService {
         return intent;
     }
 
+    public static Intent makeIntentGEocoding(Context context, String query) {
+        Intent intent = new Intent(context, LetsCookService.class);
+        intent.setAction(ActionConstants.ACTION_GEOCODING);
+        intent.putExtra(Constants.EXTRA_GEOCODING_QUERY, query);
+        return intent;
+    }
+
     public static Intent makeIntentLogin(Context context, String authCode) {
         Intent intent = new Intent(context, LetsCookService.class);
         intent.setAction(ActionConstants.ACTION_LOGIN);
@@ -56,6 +63,10 @@ public class LetsCookService extends IntentService {
             case ActionConstants.ACTION_LOGIN :
                 LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_LOGIN_GOOGLE, AnalyticsConstants.ACTION_LOGIN_GOOGLE, AnalyticsConstants.CONNECTING);
                 restAdapter.signIn(intent.getStringExtra(Constants.EXTRA_AUTHCODE));
+                break;
+            case ActionConstants.ACTION_GEOCODING :
+                restAdapter.getGeoCode(intent.getStringExtra(Constants.EXTRA_GEOCODING_QUERY));
+                break;
         }
     }
 }

@@ -13,4 +13,5 @@ public class ActionConstants {
     public static final String ACTION_LOGIN = "com.tae.letscook.LOGIN";
     public static final String ACTION_SIGN_IN_SUCCESS = "com.tae.letscook.SIGN_IN_SUCCESS";
     public static final String ACTION_UPDATE_SQLITE_RECIPES = "com.tae.letscook.UPDATE_SQLITE_RECIPES";
+    public static final String ACTION_GEOCODING = "com.tae.letscook.GEOCODING";
 }

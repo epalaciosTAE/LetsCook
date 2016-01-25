@@ -14,6 +14,7 @@ import com.tae.letscook.constants.Constants;
 import com.tae.letscook.constants.ServerConstants;
 import com.tae.letscook.constants.ActionConstants;
 import com.tae.letscook.model.Chef;
+import com.tae.letscook.model.geocoding.Geocoding;
 import com.tae.letscook.model.google.GoogleUser;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public class LetsCookRestAdapter {
 
             @Override
             public void failure(RetrofitError error) {
-                NetworkUtils.handleRestAdapterFailure(context,error);
+                NetworkUtils.handleRestAdapterFailure(context, error);
             }
         });
     }
@@ -97,7 +98,7 @@ public class LetsCookRestAdapter {
         iLetsCookServer.authorizeUser(authCode, new Callback<GoogleUser>() {
             @Override
             public void success(GoogleUser googleUser, Response response) {
-                Log.i(TAG, "success: response "+ response.getStatus());
+                Log.i(TAG, "success: response " + response.getStatus());
                 LocalBroadcastManager.getInstance(context)
                         .sendBroadcast(new Intent(ActionConstants.ACTION_SIGN_IN_SUCCESS)
                                 .putExtra(Constants.EXTRA_CHEF, new Chef(
@@ -108,10 +109,23 @@ public class LetsCookRestAdapter {
 
             @Override
             public void failure(RetrofitError error) {
-
+                NetworkUtils.handleRestAdapterFailure(context, error);
             }
         });
     }
 
 
+    public void getGeoCode(String query) {
+        iLetsCookServer.getGeoCode(query, new Callback<Geocoding>() {
+            @Override
+            public void success(Geocoding geocoding, Response response) {
+                Log.i(TAG, "success: " + response.getStatus());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                NetworkUtils.handleRestAdapterFailure(context, error);
+            }
+        });
+    }
 }

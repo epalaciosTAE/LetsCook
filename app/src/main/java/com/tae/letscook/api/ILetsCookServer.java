@@ -4,6 +4,7 @@ import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
 import com.tae.letscook.constants.ServerConstants;
 import com.tae.letscook.model.Chef;
+import com.tae.letscook.model.geocoding.Geocoding;
 import com.tae.letscook.model.google.GoogleUser;
 
 import java.util.List;
@@ -26,6 +27,9 @@ public interface ILetsCookServer {
 
     @GET(ServerConstants.RECIPES_RANDOM_ENDPOINT)
     public void getRandomRecipes(Callback<List<Recipe>> response);
+
+    @GET(ServerConstants.GEOCODING)
+    public void getGeoCode(@Query("geocoding") String query, Callback<Geocoding> response);
 
     @POST(ServerConstants.SIGN_IN)
     @FormUrlEncoded

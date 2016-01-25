@@ -67,6 +67,7 @@ public class Constants {
     public static final String EXTRA_FRAGMENT_ID = "extra_fragment_id";
     public static final int FRAGMENT_FAVOURITES = 0;
     public static final int FRAGMENT_PAGER = 1;
+    public static final String EXTRA_GEOCODING_QUERY = "extra_geocoding_query";
 
 //    "http://s1.1zoom.net/big3/862/340361-svetik.jpg"
 //    "http://www.nutritionbymi.com/wordpress/wp-content/uploads/2013/07/shutterstock_131743067.jpg"
