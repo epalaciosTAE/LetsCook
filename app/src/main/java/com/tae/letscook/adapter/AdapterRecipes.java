@@ -58,6 +58,11 @@ public class AdapterRecipes extends RecyclerView.Adapter<AdapterRecipes.ViewHold
         return recipes.size();
     }
 
+    public void update(List<ItemRecipe> recipes) {
+        this.recipes = recipes;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private static final String TAG = "ViewHolder";

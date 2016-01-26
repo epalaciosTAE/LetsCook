@@ -12,13 +12,15 @@ import java.util.List;
  */
 public class RecipeLocal implements Parcelable {
 
+    private int id;
     private String label;
     private String imageUrl;
     private double calories;
     private List<String> ingredientLines, dietLabels;
     private List<NutrientLocal> nutrients;
 
-    public RecipeLocal(String label, String imageUrl, double calories) {
+    public RecipeLocal(int id, String label, String imageUrl, double calories) {
+        this.id = id;
         this.label = label;
         this.imageUrl = imageUrl;
         this.calories = calories;
@@ -90,7 +92,35 @@ public class RecipeLocal implements Parcelable {
         return ingredientLines;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public List<String> getDietLabels() {
         return dietLabels;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setCalories(double calories) {
+        this.calories = calories;
+    }
+
+    public void setIngredientLines(List<String> ingredientLines) {
+        this.ingredientLines = ingredientLines;
+    }
+
+    public void setDietLabels(List<String> dietLabels) {
+        this.dietLabels = dietLabels;
+    }
+
+    public void setNutrients(List<NutrientLocal> nutrients) {
+        this.nutrients = nutrients;
     }
 }

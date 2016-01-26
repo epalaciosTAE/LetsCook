@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.tae.letscook.R;
 import com.tae.letscook.model.Item;
+import com.tae.letscook.model.ItemRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,17 @@ public class DrawableUtils {
     private static String[] getTitleResources(Context context, int arrayResource) {
         return context.getResources().getStringArray(arrayResource);
     }
+
+//    public static List<ItemRecipe> itemsFromResourcesFactory(Context context, int arrayTitles, int arrayImages) {
+//        String[] titles = getTitleResources(context, arrayTitles);
+//        int[] images = getImagesResources(context, arrayImages);
+//        List<ItemRecipe> items = new ArrayList<>(titles.length);
+//        for (int i = 0; i < titles.length; i++) {
+//            items.add(new ItemRecipe(titles[i], String.valueOf(images[i])));
+//        }
+//        return items;
+//    }
+
 
     public static List<Item> itemsFromResourcesFactory(Context context, int arrayTitles, int arrayImages) {
         String[] titles = getTitleResources(context, arrayTitles);

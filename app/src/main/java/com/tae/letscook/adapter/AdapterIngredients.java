@@ -1,14 +1,16 @@
 package com.tae.letscook.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tae.letscook.R;
-import com.tae.letscook.model.ItemIngredient;
+import com.tae.letscook.model.CustomIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +23,21 @@ import butterknife.ButterKnife;
  */
 public class AdapterIngredients extends RecyclerView.Adapter<AdapterIngredients.ViewHolder> {
 
+    private static final String TAG = AdapterIngredients.class.getSimpleName();
     private Context context;
-    private List<ItemIngredient> ingredients;
+    private List<CustomIngredient> ingredients;
 
     public AdapterIngredients(Context context) {
         this.context = context;
         ingredients = new ArrayList<>();
+    }
+
+    public AdapterIngredients(Context context, @Nullable List<CustomIngredient> ingredients) {
+        this.context = context;
+        this.ingredients = ingredients;
+        if (ingredients != null) {
+            Log.i(TAG, "AdapterIngredients: ingredients list size: " + ingredients.size());
+        }
     }
 
 
@@ -39,16 +50,16 @@ public class AdapterIngredients extends RecyclerView.Adapter<AdapterIngredients.
 
     @Override
     public void onBindViewHolder(AdapterIngredients.ViewHolder holder, int position) {
-        holder.tvName.setText(ingredients.get(position).getName());
+        holder.tvName.setText(ingredients.get(position).getIngredient());
         holder.tvAmount.setText(ingredients.get(position).getAmount());
     }
 
     @Override
     public int getItemCount() {
-        return ingredients.size();
+        return ingredients != null ? ingredients.size() : 0;
     }
 
-    public void addIngredient(ItemIngredient ingredient) {
+    public void addIngredient(CustomIngredient ingredient) {
         ingredients.add(ingredient);
         notifyDataSetChanged();
     }
@@ -58,7 +69,7 @@ public class AdapterIngredients extends RecyclerView.Adapter<AdapterIngredients.
         notifyDataSetChanged();
     }
 
-    public List<ItemIngredient> getIngredients() {
+    public List<CustomIngredient> getIngredients() {
         return ingredients;
     }
 

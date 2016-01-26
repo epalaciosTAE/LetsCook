@@ -5,13 +5,17 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.tae.letscook.api.apiGeocoding.Geocoding;
+import com.tae.letscook.api.apiGeocoding.Result;
 import com.tae.letscook.api.apiModel.Digest;
 import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
+import com.tae.letscook.model.CustomRecipe;
 import com.tae.letscook.model.ItemRecipe;
 import com.tae.letscook.model.NutrientLocal;
 import com.tae.letscook.model.RecipeLocal;
 import com.tae.letscook.model.facebook.FacebookUser;
+import com.tae.letscook.model.geocoding.GeocodingLatLng;
 
 import org.json.JSONObject;
 
@@ -30,6 +34,15 @@ public class ModelConverter {
         }
         return itemRecipes;
     }
+
+    public static ArrayList<ItemRecipe> convertCustomRecipeToItemRecipe(List<CustomRecipe>recipes) {
+        ArrayList<ItemRecipe> itemRecipes = new ArrayList<>(recipes.size());
+        for (CustomRecipe recipe : recipes) {
+            itemRecipes.add(new ItemRecipe(recipe.getTitle(),recipe.getImagePath()));
+        }
+        return itemRecipes;
+    }
+
 
     @NonNull
     public static ArrayList<RecipeLocal> convertApiModelToLocalRecipes(List<Hit> hits) {
@@ -68,5 +81,13 @@ public class ModelConverter {
         JsonElement element = parser.parse(object.toString());
         Gson gson = new Gson();
         return gson.fromJson(element, FacebookUser.class);
+    }
+
+    public static List<GeocodingLatLng> convertGeocodingApiToLocalGeocoding(Geocoding geocoding) {
+        List<GeocodingLatLng> locations = new ArrayList<>(geocoding.getResults().size());
+        for (Result result : geocoding.getResults()) {
+            locations.add(new GeocodingLatLng(result.getGeometry().getLocation().getLat(), result.getGeometry().getLocation().getLng()));
+        }
+        return locations;
     }
 }

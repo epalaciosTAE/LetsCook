@@ -71,4 +71,8 @@ public class NutrientLocal implements Parcelable {
     public String getUnit() {
         return unit;
     }
+
+    public int getFkRecipe() {
+        return fkRecipe;
+    }
 }
