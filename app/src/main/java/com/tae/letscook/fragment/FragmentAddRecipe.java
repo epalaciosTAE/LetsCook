@@ -35,7 +35,9 @@ import com.tae.letscook.constants.AnalyticsConstants;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.dialog.DialogFragmentAddIngredient;
 import com.tae.letscook.listeners.OnIngredientAddedListener;
-import com.tae.letscook.model.ItemIngredient;
+import com.tae.letscook.model.CustomIngredient;
+import com.tae.letscook.model.CustomRecipe;
+import com.tae.letscook.service.LetsCookService;
 
 import java.io.File;
 
@@ -57,6 +59,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
     private AdapterIngredients adapter;
     private ItemTouchHelper.SimpleCallback simpleTouchCallback;
     private File tempImageFile;
+    private String budget, time, level, guests;
 
     /**
      * This builder receives the params from DialogFragmentRecipeTitle
@@ -138,7 +141,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
     }
 
     private String getTitleRecipe() {
-        return Constants.RECIPE + getArguments().getString(Constants.ARGS_RECIPE_TITLE);
+        return getArguments().getString(Constants.ARGS_RECIPE_TITLE);
     }
 
     /**
@@ -150,12 +153,37 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
         dialog.show(getActivity().getSupportFragmentManager(), getResources().getString(R.string.dialog_add_ingredient));
     }
 
-    @OnClick( R.id.fab_add_ingredient)
+    @OnClick({R.id.fab_add_ingredient, R.id.btn_add_recipe})
     protected void onFabClick(View view) {
         if (view.getId() == R.id.fab_add_ingredient) {
             Log.i("FragmentAddRecipe", "click");
             displayAddIngredientDialog();
             LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_ADD_INGREDIENT, AnalyticsConstants.ACTION_ADD, AnalyticsConstants.ADD_INGREDIENT_LABEL);
+        } else if (tempImageFile != null) {
+            getActivity().startService(LetsCookService.makeIntentRecipe(
+                    getActivity(),
+                    new CustomRecipe(
+                            tvRecipeTitle.getText().toString(),
+                            tempImageFile.getAbsolutePath(),
+                            budget,
+                            level,
+                            guests,
+                            time,
+                            adapter.getIngredients()
+                    )));
+            getActivity().getSupportFragmentManager().popBackStack();
+        } else {
+            getActivity().startService(LetsCookService.makeIntentRecipe(
+                    getActivity(),
+                    new CustomRecipe(
+                            tvRecipeTitle.getText().toString(),
+                            budget,
+                            level,
+                            guests,
+                            time,
+                            adapter.getIngredients()
+                    )));
+            getActivity().getSupportFragmentManager().popBackStack();
         }
     }
 
@@ -164,15 +192,19 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
         switch (parent.getId()) {
             case R.id.spinner_budget : // TODO get the data from the spinners to create the recipe object
                 Log.i(TAG, "onItemSelected: " + parent.getAdapter().getItem(position));
+                budget = (String) parent.getAdapter().getItem(position);
                 break;
             case R.id.spinner_level :
                 Log.i(TAG, "onItemSelected: " + parent.getAdapter().getItem(position));
+                level = (String) parent.getAdapter().getItem(position);
                 break;
             case R.id.spinner_dinner_guest :
                 Log.i(TAG, "onItemSelected: " + parent.getAdapter().getItem(position));
+                guests = (String) parent.getAdapter().getItem(position);
                 break;
             case R.id.spinner_time :
                 Log.i(TAG, "onItemSelected: " + parent.getAdapter().getItem(position));
+                time = (String) parent.getAdapter().getItem(position);
                 break;
         }
 
@@ -187,7 +219,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
     @Override
     public void addIngredient(String ingredient, String amount) {
         Log.i(TAG, "ingredient: " + ingredient + " amount " + amount);
-        adapter.addIngredient(new ItemIngredient(ingredient, amount));
+        adapter.addIngredient(new CustomIngredient(ingredient, amount));
     }
 
     /**

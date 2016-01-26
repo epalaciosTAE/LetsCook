@@ -40,6 +40,8 @@ import com.tae.letscook.constants.ActionConstants;
 import com.tae.letscook.dialog.DialogFragmentRecipeTitle;
 import com.tae.letscook.fragment.FragmentAddEvent;
 import com.tae.letscook.fragment.FragmentAddRecipe;
+import com.tae.letscook.fragment.FragmentCustomRecipeDetail;
+import com.tae.letscook.fragment.FragmentCustomRecipes;
 import com.tae.letscook.fragment.FragmentEvents;
 import com.tae.letscook.fragment.FragmentNutrients;
 import com.tae.letscook.fragment.FragmentOtherChefs;
@@ -53,6 +55,7 @@ import com.tae.letscook.listeners.OnRecipeItemListener;
 import com.tae.letscook.listeners.OnRecipeTitleListener;
 import com.tae.letscook.listeners.OnTaskResponse;
 import com.tae.letscook.model.Chef;
+import com.tae.letscook.model.CustomRecipe;
 import com.tae.letscook.model.Event;
 import com.tae.letscook.model.Item;
 import com.tae.letscook.model.ItemRecipe;
@@ -84,6 +87,7 @@ public class ActivityDrawer extends AppCompatActivity
     private List<RecipeLocal>recipes, suggestionsOfTheDay, recipesSQLite; // receive their data from broadcast receiver
     private List<ItemRecipe> suggestions;
     private List<Event> events;
+    private List<CustomRecipe> customRecipes;
     private boolean ofTheDay, isFragmentFavourites;
     private Chef chef;
 
@@ -101,12 +105,14 @@ public class ActivityDrawer extends AppCompatActivity
         initProgressDialog();
         mToolbar.setNavigationIcon(android.R.drawable.star_big_on); // this changes the burguer
 
-        Log.i(TAG, "onCreate: Chef data from splash activity" + getIntent().getParcelableExtra(Constants.EXTRA_CHEF));
         chef = getIntent().getParcelableExtra(Constants.EXTRA_CHEF);
-        Log.i(TAG, "onCreate: retrieving events from splash activity");
+        Log.i(TAG, "onCreate: Chef data from splash activity" + getIntent().getParcelableExtra(Constants.EXTRA_CHEF));
         events = getIntent().getParcelableArrayListExtra(Constants.EXTRA_EVENTS);
-        Log.i(TAG, "onCreate: retrieving recipes sqlite from splash activity");
+        Log.i(TAG, "onCreate: retrieving events from splash activity " + events.size());
         recipesSQLite = getIntent().getParcelableArrayListExtra(Constants.EXTRA_RECIPES);
+        Log.i(TAG, "onCreate: retrieving recipes sqlite (favs) from splash activity " + recipesSQLite.size());
+        customRecipes = getIntent().getParcelableArrayListExtra(Constants.EXTRA_CUSTOM_RECIPES);
+        Log.i(TAG, "onCreate: retrieving custom recipes from splash activity " + customRecipes.size());
 
         mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
@@ -114,7 +120,10 @@ public class ActivityDrawer extends AppCompatActivity
     }
 
     private void loadSuggestionRecipes() {
-        startService(LetsCookService.makeIntent(ActivityDrawer.this, ActionConstants.ACTION_RECIPES_RANDOM));
+        startService(LetsCookService.makeIntentSuggestions(
+                ActivityDrawer.this,
+                ActionConstants.ACTION_RECIPES_RANDOM,
+                customRecipes));
     }
 
     private void initProgressDialog() {
@@ -300,16 +309,34 @@ public class ActivityDrawer extends AppCompatActivity
      * @param category
      */
     @Override
-    public void onCategoryItemClick(View v, int position, String category, boolean isCategory) { //Click in categories: display fragment recipes when click any item in fragment categories
-        if (isCategory) {
-            Log.i("MAIN", "onItemClick: adapter categories  " + String.valueOf(position));
-            downloadRecipesByCategory(category);
-            progressDialog.setMessage("Loading recipes");
-            progressDialog.show();
-        } else if (category.equals(suggestionsOfTheDay.get(position - 1).getLabel())) { //is suggestion, is its a recipe--> detail
-            displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
-                    getResources().getString(R.string.fragment_recipes_detail));
+    public void onCategoryItemClick(View v, int position, String category, int adapterId) { //Click in categories: display fragment recipes when click any item in fragment categories
+        switch (adapterId) {
+            case Constants.ADAPTER_CATEGORIES_ID :
+                Log.i("MAIN", "onItemClick: adapter categories  " + String.valueOf(position));
+                downloadRecipesByCategory(category);
+                progressDialog.setMessage("Loading recipes");
+                progressDialog.show();
+                break;
+            case Constants.ADAPTER_SUGGESTIONS_ID :
+                if (category.equals(suggestionsOfTheDay.get(position - 1).getLabel())) { //is suggestion, is its a recipe--> detail
+                    displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
+                            getResources().getString(R.string.fragment_recipes_detail));
+                }
+                break;
+            case Constants.ADAPTER_CUSTOM_RECIPES_ID :
+                displayFragment(FragmentCustomRecipeDetail.newInstance(customRecipes.get(position - 1)),
+                        getResources().getString(R.string.fragment_custom_recipe_detail));
+                break;
         }
+//        if () {
+//            Log.i("MAIN", "onItemClick: adapter categories  " + String.valueOf(position));
+//            downloadRecipesByCategory(category);
+//            progressDialog.setMessage("Loading recipes");
+//            progressDialog.show();
+//        } else if (category.equals(suggestionsOfTheDay.get(position - 1).getLabel())) { //is suggestion, is its a recipe--> detail
+//            displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
+//                    getResources().getString(R.string.fragment_recipes_detail));
+//        }
 
     }
 
@@ -326,6 +353,8 @@ public class ActivityDrawer extends AppCompatActivity
         intentFilter.addAction(ActionConstants.ACTION_UPDATE_SQLITE_RECIPES);
         intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_GEOCODING_SUCCESS);
         intentFilter.addAction(ActionConstants.ACTION_UPLOAD_EVENT_SUCCESS);
+        intentFilter.addAction(ActionConstants.ACTION_UPLOAD_CUSTOM_RECIPE_SUCCESS);
+        intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_CUSTOM_RECIPE_IMAGES_SUCCESS);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
         initFacebookAppEventsLogger();
 
@@ -430,7 +459,10 @@ public class ActivityDrawer extends AppCompatActivity
 //                    for (int i = 0; i < 10; i++) {
 //                        test.add(new ItemRecipe("dfdsdfsdfsd", "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg"));
 //                    }
-                    displayFragment(FragmentRecipesViewer.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(suggestionsOfTheDay)), mFragmentTags[0]);
+                    displayFragment(FragmentRecipesViewer.newInstance(
+                            ModelConverter.convertLocalRecipeToItemRecipe(suggestionsOfTheDay),
+                            ModelConverter.convertCustomRecipeToItemRecipe(customRecipes)
+                    ), mFragmentTags[0]);
                     break;
                 case ActionConstants.ACTION_UPDATE_SQLITE_RECIPES :
                     recipesSQLite = intent.getParcelableArrayListExtra(Constants.EXTRA_SQLITE_RECIPES);
@@ -454,6 +486,29 @@ public class ActivityDrawer extends AppCompatActivity
                     FragmentEvents fragmentEvents = (FragmentEvents) getSupportFragmentManager()
                             .findFragmentByTag(getResources().getString(R.string.fragment_events));
                     fragmentEvents.updateEvents((Event) intent.getParcelableExtra(Constants.EXTRA_EVENT));
+                    break;
+                case ActionConstants.ACTION_UPLOAD_CUSTOM_RECIPE_SUCCESS :
+                    // TODO update custom recipes list
+                    Log.i(TAG, "onReceive: custom recipe saved");
+                    ToastUtils.showToast(ActivityDrawer.this, "Recipe saved!");
+                    CustomRecipe customRecipe = intent.getParcelableExtra(Constants.EXTRA_CUSTOM_RECIPE);
+                    customRecipes.add(customRecipe);
+                    FragmentRecipesViewer fragmentRecipesViewer = (FragmentRecipesViewer) getSupportFragmentManager()
+                            .findFragmentByTag(getResources().getString(R.string.fragment_recipes_viewer));
+                    if (fragmentRecipesViewer != null) {
+                        fragmentRecipesViewer.updateCustomRecipesInFragment(customRecipes);
+                    }
+                    // TODO update list in fragment and in adapter
+                    break;
+                case ActionConstants.ACTION_DOWNLOAD_CUSTOM_RECIPE_IMAGES_SUCCESS: // This can be a race with random recipes
+//                    ArrayList<String> imagesPaths = intent.getStringArrayListExtra(Constants.EXTRA_PATH_IMAGES);
+//                    for (CustomRecipe recipe : customRecipes) {
+//                        for (String path : imagesPaths) {
+//                            if (recipe.getTitle().equals(path)) {
+//                                recipe.setImagePath(path);
+//                            }
+//                        }
+//                    }
                     break;
             }
             if (progressDialog != null) {

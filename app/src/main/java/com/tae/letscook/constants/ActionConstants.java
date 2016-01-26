@@ -19,9 +19,13 @@ public class ActionConstants {
     public static final String ACTION_DOWNLOAD_GEOCODING_SUCCESS = "com.tae.letscook.ACTION_DOWNLOAD_GEOCODING_SUCCESS";
     public static final String ACTION_POST_CHEF = "com.tae.letscook.POST_CHEF";
     public static final String ACTION_POST_EVENT = "com.tae.letscook.POST_EVENT";
-    public static final String ACTION_GET_EVENTS = "com.tae.letscook.ACTION_DOWNLOAD_EVENTS_SUCCESS";
+    public static final String ACTION_LOAD_START_DATA = "com.tae.letscook.ACTION_DOWNLOAD_EVENTS_SUCCESS";
     public static final String ACTION_DOWNLOAD_EVENTS_SUCCESS = "com.tae.letscook.ACTION_DOWNLOAD_EVENTS_SUCCESS";
     public static final String ACTION_LOAD_SQLITE_FAVS_SUCCESS = "com.tae.letscook.ACTION_LOAD_SQLITE_FAVS_SUCCESS";
     public static final String ACTION_DOWNLOAD_CHEFS_SUCCESS = "com.tae.letscook.ACTION_DOWNLOAD_ALL_CHEFS_SUCCESS";
     public static final String ACTION_UPLOAD_EVENT_SUCCESS = "com.tae.letscook.ACTION_UPDATE_EVENT_SUCCESS";
+    public static final String ACTION_POST_CUSTOM_RECIPE = "com.tae.letscook.ACTION_POST_CUSTOM_RECIPE";
+    public static final String ACTION_UPLOAD_CUSTOM_RECIPE_SUCCESS = "com.tae.letscook.ACTION_POST_CUSTOM_RECIPE_SUCCES";
+    public static final String ACTION_DOWNLOAD_CUSTOM_RECIPE_SUCCESS = "com.tae.letscook.ACTION_DOWNLOAD_CUSTOM_RECIPE_SUCCES";
+    public static final String ACTION_DOWNLOAD_CUSTOM_RECIPE_IMAGES_SUCCESS = "com.tae.letscook.ACTION_DOWNLOAD_CUSTOM_RECIPE_IMAGE_SUCCES";
 }

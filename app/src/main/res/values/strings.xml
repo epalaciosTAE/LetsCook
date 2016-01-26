@@ -70,4 +70,6 @@
     <string name="et_hint_event_title">Event title</string>
     <string name="et_hint_event_address">Address</string>
     <string name="event_enter_address">Please enter an address</string>
+    <string name="fragment_custom_recipes">FragmentCustomRecipes</string>
+    <string name="fragment_custom_recipe_detail">FragmentCustomRecipeDetail</string>
 </resources>

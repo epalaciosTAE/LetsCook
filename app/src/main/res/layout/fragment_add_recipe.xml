@@ -136,11 +136,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/recycler_view"
         android:layout_alignParentEnd="true"
         fab:backgroundTint="@color/colorAccent"
         fab:elevation="4dp"
-        fab:fabSize="normal"
+        fab:fabSize="mini"
         fab:rippleColor="@color/colorPrimary"
         fab:borderWidth="2dp"
         android:src="@android:drawable/ic_input_add"/>
@@ -148,7 +148,14 @@
     <include layout="@layout/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_add_recipe"
         android:layout_below="@id/layout_ingredients"/>
+    <Button
+        android:id="@+id/btn_add_recipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Save Recipe"/>
 
 
 </RelativeLayout>

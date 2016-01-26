@@ -46,8 +46,11 @@ public class Constants {
     public static final String EXTRA_EVENTS = "extra_events";
 
     public static final String EXTRA_EVENT = "extra_event";
-    public static final String ARGS_CATEGORY_ID = "args_category_id";
+    public static final String EXTRA_PATH_IMAGES = "extra_images_path";
 
+    public static final String EXTRA_CUSTOM_RECIPES = "extra_custom_recipes" ;
+    public static final String EXTRA_CUSTOM_RECIPE = "extra_custo_recipe";
+    public static final String ARGS_CATEGORY_ID = "args_category_id";
     public static final String ARGS_RECIPE_TITLE= "args_recipe_title";
     public static final String ARGS_RECIPE_CATEGORY= "args_recipe_category";
     public static final String RECIPE = "Recipe: ";
@@ -56,16 +59,17 @@ public class Constants {
     public static final String CAMERA_IMAGES_FOLDER = "LetsCook";
     public static final int REQUEST_CAMERA_IMAGE = 201;
     public static final int CARD_VIEW_KCAL = 1;
+
     public static final String KCAL = "calories";
     public static final String PROTEIN = "High-Protein";
     public static final String FIBER = "High-Fiber";
-
     public static final String CARB = "Low-Carb";
     public static final String FAT = "Low-Fat";
     public static final String SODIUM = "Low-Sodium";
     public static final String BALANCED = "Balanced";
     public static final CharSequence VIEW_PAGER_WORLD_FOOD = "World Food";
     public static final CharSequence VIEW_PAGER_SUGGESTIONS = "Suggestions";
+    public static final CharSequence VIEW_PAGER_CUSTOM_RECIPES = "Your recipes";
     public static final int FADE_IN = 0;
     public static final int FADE_OUT = 1;
     public static final String CHECK_RANDOM_RECIPES = "Don't miss the suggestions for today!";
@@ -76,6 +80,8 @@ public class Constants {
     public static final String SHARED_PREFS_USER = "shared_prefs_user";
     public static final String SHARE_PREFS_FIRST_TIME = "shared_prefs_first_time_running";
     public static final String EXTRA_CHEFS = "extra_all_chefs";
+    public static final int ADAPTER_SUGGESTIONS_ID = 0;
+    public static final int ADAPTER_CUSTOM_RECIPES_ID = 2;
 
 
 //    "http://s1.1zoom.net/big3/862/340361-svetik.jpg"

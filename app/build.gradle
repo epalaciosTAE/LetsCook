@@ -60,5 +60,6 @@ dependencies {
         transitive = true;
     }
     compile 'com.facebook.android:facebook-android-sdk:4.9.0'
+    compile files('libs/commons-io-2.4.jar')
 
 }

@@ -10,6 +10,7 @@ import com.tae.letscook.api.apiGeocoding.Result;
 import com.tae.letscook.api.apiModel.Digest;
 import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
+import com.tae.letscook.model.CustomRecipe;
 import com.tae.letscook.model.ItemRecipe;
 import com.tae.letscook.model.NutrientLocal;
 import com.tae.letscook.model.RecipeLocal;
@@ -33,6 +34,15 @@ public class ModelConverter {
         }
         return itemRecipes;
     }
+
+    public static ArrayList<ItemRecipe> convertCustomRecipeToItemRecipe(List<CustomRecipe>recipes) {
+        ArrayList<ItemRecipe> itemRecipes = new ArrayList<>(recipes.size());
+        for (CustomRecipe recipe : recipes) {
+            itemRecipes.add(new ItemRecipe(recipe.getTitle(),recipe.getImagePath()));
+        }
+        return itemRecipes;
+    }
+
 
     @NonNull
     public static ArrayList<RecipeLocal> convertApiModelToLocalRecipes(List<Hit> hits) {

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tae.letscook.R;
 import com.tae.letscook.Utils.DrawableUtils;
+import com.tae.letscook.constants.Constants;
 import com.tae.letscook.listeners.OnCategoryItemListener;
 import com.tae.letscook.listeners.OnItemClickListener;
 import com.tae.letscook.model.Item;
@@ -27,7 +28,7 @@ public class AdapterCategories extends RecyclerView.Adapter<AdapterCategories.Vi
 
     public AdapterCategories(Context context) {
         this.context = context;
-        categories = DrawableUtils.itemsFromResourcesFactory(context, R.array.category_titles, R.array.categories_images);
+//        categories = DrawableUtils.itemsFromResourcesFactory(context, R.array.category_titles, R.array.categories_images);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class AdapterCategories extends RecyclerView.Adapter<AdapterCategories.Vi
 
         @Override
         public void onClick(View v) {
-            categoryClickListener.onCategoryItemClick(v, getAdapterPosition(), categories.get(getAdapterPosition()).getItem(), true);
+            categoryClickListener.onCategoryItemClick(v, getAdapterPosition(), categories.get(getAdapterPosition()).getItem(), Constants.ADAPTER_CATEGORIES_ID);
         }
     }
 }
