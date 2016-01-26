@@ -2,21 +2,23 @@ package com.tae.letscook.api;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.tae.letscook.Utils.ModelConverter;
 import com.tae.letscook.Utils.NetworkUtils;
-import com.tae.letscook.Utils.ToastUtils;
+import com.tae.letscook.api.apiGeocoding.Geocoding;
 import com.tae.letscook.api.apiModel.Hit;
 import com.tae.letscook.api.apiModel.Recipe;
 import com.tae.letscook.constants.Constants;
 import com.tae.letscook.constants.ServerConstants;
 import com.tae.letscook.constants.ActionConstants;
 import com.tae.letscook.model.Chef;
-import com.tae.letscook.model.geocoding.Geocoding;
+import com.tae.letscook.model.Event;
 import com.tae.letscook.model.google.GoogleUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -98,7 +100,7 @@ public class LetsCookRestAdapter {
         iLetsCookServer.authorizeUser(authCode, new Callback<GoogleUser>() {
             @Override
             public void success(GoogleUser googleUser, Response response) {
-                Log.i(TAG, "success: response " + response.getStatus());
+                Log.i(TAG, "signIn: response " + response.getStatus());
                 LocalBroadcastManager.getInstance(context)
                         .sendBroadcast(new Intent(ActionConstants.ACTION_SIGN_IN_SUCCESS)
                                 .putExtra(Constants.EXTRA_CHEF, new Chef(
@@ -119,7 +121,11 @@ public class LetsCookRestAdapter {
         iLetsCookServer.getGeoCode(query, new Callback<Geocoding>() {
             @Override
             public void success(Geocoding geocoding, Response response) {
-                Log.i(TAG, "success: " + response.getStatus());
+                Log.i(TAG, "getGeoCode: " + response.getStatus());
+                LocalBroadcastManager.getInstance(context)
+                        .sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_GEOCODING_SUCCESS)
+                                .putParcelableArrayListExtra(Constants.EXTRA_GEOCODING,
+                                        (ArrayList<? extends Parcelable>) ModelConverter.convertGeocodingApiToLocalGeocoding(geocoding)));
             }
 
             @Override
@@ -127,5 +133,70 @@ public class LetsCookRestAdapter {
                 NetworkUtils.handleRestAdapterFailure(context, error);
             }
         });
+    }
+
+    public void postChef(Chef chef) {
+        iLetsCookServer.saveChefInServer(chef, new Callback<Chef>() {
+            @Override
+            public void success(Chef chef, Response response) {
+                Log.i(TAG, "postChef: response" + response.getStatus());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.i(TAG, "postChef: FAIL" + error.getMessage());
+                NetworkUtils.handleRestAdapterFailure(context, error);
+            }
+        });
+    }
+
+    public void postEvent(String uuid, Event event) {
+        iLetsCookServer.saveEventInServer(uuid, event, new Callback<Event>() {
+            @Override
+            public void success(Event event, Response response) {
+                Log.i(TAG, "postEvent: response" + response.getStatus());
+                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(ActionConstants.ACTION_UPLOAD_EVENT_SUCCESS)
+                        .putExtra(Constants.EXTRA_EVENT, event));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.i(TAG, "postEvent: FAIL" + error.getMessage());
+                NetworkUtils.handleRestAdapterFailure(context, error);
+            }
+        });
+    }
+
+    public void getEvents () {
+
+        iLetsCookServer.getEvents(new Callback<List<Event>>() {
+            @Override
+            public void success(List<Event> events, Response response) {
+                Log.i(TAG, "get events success: " + response.getStatus());
+                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_EVENTS_SUCCESS)
+                        .putParcelableArrayListExtra(Constants.EXTRA_EVENTS, (ArrayList<? extends Parcelable>) events));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.i(TAG, "get Events: FAIL" + error.getMessage());
+                NetworkUtils.handleRestAdapterFailure(context, error);
+            }
+        });
+//
+//        iLetsCookServer.getChefs(new Callback<List<Chef>>() {
+//            @Override
+//            public void success(List<Chef> chefs, Response response) {
+//                Log.i(TAG, "get all chefs success: " + response.getStatus());
+//                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(ActionConstants.ACTION_DOWNLOAD_CHEFS_SUCCESS)
+//                        .putParcelableArrayListExtra(Constants.EXTRA_CHEFS, (ArrayList<? extends Parcelable>) chefs));
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.i(TAG, "get Events: FAIL" + error.getMessage());
+//                NetworkUtils.handleRestAdapterFailure(context, error);
+//            }
+//        });
     }
 }

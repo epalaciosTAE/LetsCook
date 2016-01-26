@@ -50,8 +50,8 @@ public class FragmentCategories extends Fragment {
         super.onCreate(savedInstanceState);
         getActivity().setTitle(getActivity().getString(R.string.fragment_categories_title));
         Log.i(TAG, "onCreate: ");
-        mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        loadAnimations();
+//        mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+//        loadAnimations();
         LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_categories_title));
     }
 
@@ -78,20 +78,20 @@ public class FragmentCategories extends Fragment {
         adapterCategoriesMaterial = new AdapterCategoriesMaterial(getActivity());
         mAdapter = new RecyclerViewMaterialAdapter(adapterCategoriesMaterial);
         recyclerView.setAdapter(mAdapter);
-        recyclerView.addOnScrollListener(new HidingScrollListener() {
-            @Override
-            public void onHide() {
-                Animations.hideViews(mToolbar);
-                mToolbar.startAnimation(animations.get(Constants.FADE_OUT));
-//                mToolbar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onShow() {
-                Animations.showViews(mToolbar);
-                mToolbar.startAnimation(animations.get(Constants.FADE_IN));
-            }
-        });
+//        recyclerView.addOnScrollListener(new HidingScrollListener() {
+//            @Override
+//            public void onHide() {
+//                Animations.hideViews(mToolbar);
+//                mToolbar.startAnimation(animations.get(Constants.FADE_OUT));
+////                mToolbar.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onShow() {
+//                Animations.showViews(mToolbar);
+//                mToolbar.startAnimation(animations.get(Constants.FADE_IN));
+//            }
+//        });
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
     }
 

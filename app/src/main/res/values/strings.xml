@@ -14,6 +14,7 @@
     <string name="fragment_events">FragmentEvents</string>
     <string name="dialog_add_recipe">DialogFragmentRecipeTitle</string>
     <string name="dialog_add_ingredient">DialogFragmentAddIngredient</string>
+    <string name="fragment_add_event">FragmentManager</string>
 
 
     <string name="et_hint_recipe_title">Recipe Title</string>
@@ -68,4 +69,5 @@
     <string name="facebook_picture">picture</string>
     <string name="et_hint_event_title">Event title</string>
     <string name="et_hint_event_address">Address</string>
+    <string name="event_enter_address">Please enter an address</string>
 </resources>

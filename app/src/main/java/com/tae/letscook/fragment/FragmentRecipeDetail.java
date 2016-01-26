@@ -44,7 +44,7 @@ import butterknife.OnClick;
 /**
  * Created by Eduardo on 16/01/2016.
  */
-public class FragmentRecipeDetail extends Fragment implements Animation.AnimationListener{
+public class FragmentRecipeDetail extends Fragment implements Animation.AnimationListener {
 
     private static final String TAG = SaveRecipeToFavsTask.class.getSimpleName();
     @Bind(R.id.tv_recipe_detail_title) protected TextView tvTitle;

@@ -38,6 +38,7 @@ import com.tae.letscook.R;
 import com.tae.letscook.adapter.AdapterDrawer;
 import com.tae.letscook.constants.ActionConstants;
 import com.tae.letscook.dialog.DialogFragmentRecipeTitle;
+import com.tae.letscook.fragment.FragmentAddEvent;
 import com.tae.letscook.fragment.FragmentAddRecipe;
 import com.tae.letscook.fragment.FragmentEvents;
 import com.tae.letscook.fragment.FragmentNutrients;
@@ -50,12 +51,14 @@ import com.tae.letscook.listeners.OnItemClickListener;
 import com.tae.letscook.listeners.OnNutrientsListener;
 import com.tae.letscook.listeners.OnRecipeItemListener;
 import com.tae.letscook.listeners.OnRecipeTitleListener;
-import com.tae.letscook.listeners.OnRecipesLoadedListener;
 import com.tae.letscook.listeners.OnTaskResponse;
+import com.tae.letscook.model.Chef;
+import com.tae.letscook.model.Event;
 import com.tae.letscook.model.Item;
 import com.tae.letscook.model.ItemRecipe;
 import com.tae.letscook.model.NutrientLocal;
 import com.tae.letscook.model.RecipeLocal;
+import com.tae.letscook.model.geocoding.GeocodingLatLng;
 import com.tae.letscook.service.LetsCookService;
 
 import java.util.ArrayList;
@@ -80,7 +83,9 @@ public class ActivityDrawer extends AppCompatActivity
     private ProgressDialog progressDialog;
     private List<RecipeLocal>recipes, suggestionsOfTheDay, recipesSQLite; // receive their data from broadcast receiver
     private List<ItemRecipe> suggestions;
+    private List<Event> events;
     private boolean ofTheDay, isFragmentFavourites;
+    private Chef chef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +101,20 @@ public class ActivityDrawer extends AppCompatActivity
         initProgressDialog();
         mToolbar.setNavigationIcon(android.R.drawable.star_big_on); // this changes the burguer
 
+        Log.i(TAG, "onCreate: Chef data from splash activity" + getIntent().getParcelableExtra(Constants.EXTRA_CHEF));
+        chef = getIntent().getParcelableExtra(Constants.EXTRA_CHEF);
+        Log.i(TAG, "onCreate: retrieving events from splash activity");
+        events = getIntent().getParcelableArrayListExtra(Constants.EXTRA_EVENTS);
+        Log.i(TAG, "onCreate: retrieving recipes sqlite from splash activity");
         recipesSQLite = getIntent().getParcelableArrayListExtra(Constants.EXTRA_RECIPES);
+
         mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
-        Log.i(TAG, "onCreate: Chef data " + getIntent().getParcelableExtra(Constants.EXTRA_CHEF) );
     }
 
     private void loadSuggestionRecipes() {
-        startService(LetsCookService.makeIntentHomeView(ActivityDrawer.this));
+        startService(LetsCookService.makeIntent(ActivityDrawer.this, ActionConstants.ACTION_RECIPES_RANDOM));
     }
 
     private void initProgressDialog() {
@@ -248,7 +258,7 @@ public class ActivityDrawer extends AppCompatActivity
 //        mDrawerFragments.put(Constants.FRAGMENT_ADD_RECIPE_POSITION, FragmentAddRecipe.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_OTHER_CHEFS_POSITION, FragmentOtherChefs.newInstance());
         mDrawerFragments.put(Constants.FRAGMENT_FAVOURITES_POSITION, FragmentRecipes.newInstance((ArrayList<ItemRecipe>) itemRecipes, true));
-        mDrawerFragments.put(Constants.FRAGMENT_EVENTS_POSITION, FragmentEvents.newInstance());
+        mDrawerFragments.put(Constants.FRAGMENT_EVENTS_POSITION, FragmentEvents.newInstance(events));
         return mDrawerFragments;
     }
 
@@ -314,6 +324,8 @@ public class ActivityDrawer extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter(ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS);
         intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS);
         intentFilter.addAction(ActionConstants.ACTION_UPDATE_SQLITE_RECIPES);
+        intentFilter.addAction(ActionConstants.ACTION_DOWNLOAD_GEOCODING_SUCCESS);
+        intentFilter.addAction(ActionConstants.ACTION_UPLOAD_EVENT_SUCCESS);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
         initFacebookAppEventsLogger();
 
@@ -427,6 +439,21 @@ public class ActivityDrawer extends AppCompatActivity
                     fragmentRecipes.setRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesSQLite));
                     fragmentRecipes.updateRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesSQLite));
                     fragmentRecipes.stopSwipeRefresh();
+                    break;
+                case ActionConstants.ACTION_DOWNLOAD_GEOCODING_SUCCESS :
+                    List<GeocodingLatLng> locations = intent.getParcelableArrayListExtra(Constants.EXTRA_GEOCODING);
+                    FragmentAddEvent fragmentAddEvent = (FragmentAddEvent) getSupportFragmentManager()
+                            .findFragmentByTag(getResources().getString(R.string.fragment_add_event));
+                    if (locations != null && !locations.isEmpty()) {
+                        fragmentAddEvent.showMarkerWithLocations(locations);
+                    } else {
+                        ToastUtils.showToast(getApplicationContext(), "There is no address for your search");
+                    }
+                    break;
+                case ActionConstants.ACTION_UPLOAD_EVENT_SUCCESS :
+                    FragmentEvents fragmentEvents = (FragmentEvents) getSupportFragmentManager()
+                            .findFragmentByTag(getResources().getString(R.string.fragment_events));
+                    fragmentEvents.updateEvents((Event) intent.getParcelableExtra(Constants.EXTRA_EVENT));
                     break;
             }
             if (progressDialog != null) {
