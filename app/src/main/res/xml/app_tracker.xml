@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- End current session if app sleeps for a period of time -->
+    <integer name="ga_sessionTimeout">3000</integer>
+<!--https://developers.google.com/android/reference/com/google/android/gms/analytics/Tracker-->
+    <!-- Enable automatic Activity measurement -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <int name="ga_dispatchPeriod">1</int>
+
+    <string name="ga_logLevel">verbose</string>
+
+    <bool name="ga_dryRun">true</bool>
+
+    <!--  The property id associated with this analytics tracker -->
+    <string name="ga_trackingId">UA-72664147-1</string>
+
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <screenName name="com.tae.letscook.activity.ActivityDrawer">Drawer Activity</screenName>
+
+    <!--<screenName name="com.tae.asos.activity.">Splash Screen</screenName>-->
+
+    <!--
+      See Project Structure -> Analytics -> Google Analytics -> Learn More
+      to learn more about configuring this file.
+    -->
+</resources>

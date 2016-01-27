@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/img_custom_recipe_detail"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="200dp"/>
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab__custom_recipe_detail"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="10dp"-->
+        <!--android:src="@drawable/ic_like"-->
+        <!--fab:backgroundTint="@color/colorAccent"-->
+        <!--fab:elevation="4dp"-->
+        <!--fab:fabSize="mini"-->
+        <!--fab:rippleColor="@color/colorPrimary"-->
+        <!--fab:borderWidth="2dp"-->
+        <!--android:layout_alignEnd="@id/img_custom_recipe_detail"/>-->
+
+
+
+    <TextView
+        android:id="@+id/tv_custom_recipe_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/img_custom_recipe_detail"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"/>
+    <LinearLayout
+        android:id="@+id/custom_details_1"
+        android:layout_below="@id/tv_custom_recipe_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryDark"
+        android:weightSum="1">
+        <TextView
+            android:id="@+id/tv_custom_recipe_budget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_item_recipe_image"
+            android:padding="5dp"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_custom_recipe_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_weight="0.5"
+            android:padding="5dp"
+            android:background="@drawable/shape_item_recipe_image"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/custom_details_2"
+        android:layout_below="@id/custom_details_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryDark"
+        android:weightSum="1">
+        <TextView
+            android:id="@+id/tv_custom_recipe_time"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_item_recipe_image"/>
+
+        <TextView
+            android:id="@+id/tv_custom_recipe_people"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:textColor="@color/white"
+            android:padding="5dp"
+            android:background="@drawable/shape_item_recipe_image"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <include layout="@layout/recycler_view"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="5dp"
+             android:layout_marginStart="@dimen/activity_vertical_margin"
+             android:layout_marginEnd="@dimen/activity_horizontal_margin"
+             android:layout_below="@id/custom_details_2"/>
+
+</RelativeLayout>
