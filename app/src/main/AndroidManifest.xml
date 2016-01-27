@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.tae.letscook"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tae.letscook" >
 
-    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE"/>
+
+    <permission
+        android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
 
     <application
         android:name=".app.LetsCookApp"
@@ -19,87 +33,123 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <!--Meta data need it for facebook-->
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <!-- meta-data for Fabric-->
+        android:theme="@style/AppTheme"
+        android:largeHeap="true">
+
+        <!-- Meta data need it for facebook -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <!-- meta-data for Fabric -->
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="2f7096319d7be13cffb4a25d97f6fa5a41df2775" />
-        <!--MEta data Google Maps-->
-        <!--<meta-data-->
-            <!--android:name="com.google.android.maps.v2.API_KEY"-->
-            <!--android:value="@string/google_key"/>-->
-        <!--Meta Data Google Places-->
+            android:value="2f7096319d7be13cffb4a25d97f6fa5a41df2775"/>
+        <!-- MEta data Google Maps -->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.maps.v2.API_KEY" -->
+        <!-- android:value="@string/google_key"/> -->
+        <!-- Meta Data Google Places -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_key"/>
+            android:value="@string/google_key" />
+
         <activity
             android:name=".activity.ActivityDrawer"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-
-        <activity android:name=".activity.ActivityLogin"
+        <activity
+            android:name=".activity.ActivityLogin"
             android:label="@string/login"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.ActivitySplash"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activity.ActivitySplash"
-                  android:configChanges="orientation"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.NoActionBar"/>
+        <!-- Facebook Activity -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!--Facebook Activity-->
-        <activity android:name="com.facebook.FacebookActivity"
-                  android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                  android:label="@string/app_name"/>
+        <service android:name=".service.LetsCookService" />
 
-
-        <service android:name=".service.LetsCookService"/>
-
-        <!--Analytics ENABLE IF NEED IT-->
+        <!-- Analytics ENABLE IF NEED IT -->
         <!--
          Optionally, register AnalyticsReceiver and AnalyticsService to support background
          dispatching on non-Google Play devices
-       -->
-        <!--<receiver-->
-            <!--android:name="com.google.android.gms.analytics.AnalyticsReceiver"-->
-            <!--android:enabled="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        -->
+        <!-- <receiver -->
+        <!-- android:name="com.google.android.gms.analytics.AnalyticsReceiver" -->
+        <!-- android:enabled="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
-        <!-- Facebook provider-->
-        <provider android:authorities="com.facebook.app.FacebookContentProvider1234"
-                  android:name="com.facebook.FacebookContentProvider"
-                  android:exported="true" />
+
+        <!-- Facebook provider -->
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1234"
+            android:exported="true" />
 
         <service
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
             android:exported="false" />
 
-        <!--&lt;!&ndash;-->
-             <!--Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable-->
-             <!--installation campaign reporting-->
-        <!--&ndash;&gt;-->
-        <!--<receiver-->
-            <!--android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"-->
-            <!--android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.android.vending.INSTALL_REFERRER" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!-- &lt;!&ndash; -->
+        <!-- Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable -->
+        <!-- installation campaign reporting -->
+        <!-- &ndash;&gt; -->
+        <!-- <receiver -->
+        <!-- android:name="com.google.android.gms.analytics.CampaignTrackingReceiver" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.android.vending.INSTALL_REFERRER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
-        <!--<service android:name="com.google.android.gms.analytics.CampaignTrackingService" />-->
 
+        <!-- <service android:name="com.google.android.gms.analytics.CampaignTrackingService" /> -->
+
+        <!--GCM -->
+        <!-- Add the receiver for the GCM Notifications-->
+        <receiver
+            android:name=".push_notification.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- add package-->
+                <category android:name="com.tae.letscook" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".push_notification.GcmIntentService" />
+
+        <!--PAYPAL-->
+        <service android:name="com.paypal.android.sdk.payments.PayPalService"
+            android:exported="false" />
+
+        <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PayPalFuturePaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentConsentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity" />
+        <activity android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="io.card.payment.DataEntryActivity" />
 
     </application>
 
