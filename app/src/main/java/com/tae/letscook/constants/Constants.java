@@ -82,6 +82,8 @@ public class Constants {
     public static final String EXTRA_CHEFS = "extra_all_chefs";
     public static final int ADAPTER_SUGGESTIONS_ID = 0;
     public static final int ADAPTER_CUSTOM_RECIPES_ID = 2;
+    public static final String ACTIVITY_FIRST_TIME = "activity_first_time";
+    public static final String SHARE_PREFS_FIRST_TIME_ACTIVITY = "sp_activity_first_time";
 
 
 //    "http://s1.1zoom.net/big3/862/340361-svetik.jpg"

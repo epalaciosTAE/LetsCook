@@ -24,8 +24,7 @@
             android:layout_toEndOf="@id/img_add_recipe"
             android:gravity="center_vertical"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="sdfsdfsfsdfsdfsd"/>
+            android:textStyle="bold"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -155,7 +154,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Save Recipe"/>
+        android:text="@string/add_recipe_create"/>
 
 
 </RelativeLayout>
