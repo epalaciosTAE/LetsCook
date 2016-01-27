@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tae.letscook.R;
+import com.tae.letscook.Utils.DetectTabletUtils;
 import com.tae.letscook.Utils.PhotoUtils;
 import com.tae.letscook.adapter.AdapterIngredients;
 import com.tae.letscook.app.LetsCookApp;
@@ -171,7 +172,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
                             time,
                             adapter.getIngredients()
                     )));
-            getActivity().getSupportFragmentManager().popBackStack();
+            removeFragmentIfIsSinglePane();
         } else {
             getActivity().startService(LetsCookService.makeIntentRecipe(
                     getActivity(),
@@ -183,6 +184,12 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
                             time,
                             adapter.getIngredients()
                     )));
+            removeFragmentIfIsSinglePane();
+        }
+    }
+
+    private void removeFragmentIfIsSinglePane() {
+        if (!DetectTabletUtils.isTablet(getActivity())) {
             getActivity().getSupportFragmentManager().popBackStack();
         }
     }

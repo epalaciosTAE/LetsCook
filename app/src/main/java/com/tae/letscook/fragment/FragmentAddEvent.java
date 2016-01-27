@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tae.letscook.R;
+import com.tae.letscook.Utils.DetectTabletUtils;
 import com.tae.letscook.Utils.DrawableUtils;
 import com.tae.letscook.Utils.ToastUtils;
 import com.tae.letscook.constants.Constants;
@@ -109,7 +110,9 @@ public class FragmentAddEvent extends Fragment implements OnGetDatePickerListene
                                             locations.get(0).getLng(),
                                             tvDate.getText().toString()))
                     );
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    if (!DetectTabletUtils.isTablet(getActivity())) {
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
                 } else {
                     ToastUtils.showToast(getActivity(), "Look your address in the map");
                 }

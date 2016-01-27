@@ -43,6 +43,10 @@ public class ModelConverter {
         return itemRecipes;
     }
 
+    public static ItemRecipe customRecipeToItemRecipe(CustomRecipe customRecipe) {
+        return new ItemRecipe(customRecipe.getTitle(), customRecipe.getImagePath());
+    }
+
 
     @NonNull
     public static ArrayList<RecipeLocal> convertApiModelToLocalRecipes(List<Hit> hits) {

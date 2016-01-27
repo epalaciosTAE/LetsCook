@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.appevents.AppEventsLogger;
+import com.tae.letscook.Utils.DetectTabletUtils;
 import com.tae.letscook.Utils.ModelConverter;
 import com.tae.letscook.Utils.NetworkUtils;
 import com.tae.letscook.Utils.ToastUtils;
@@ -90,7 +90,7 @@ public class ActivityDrawer extends AppCompatActivity
     private List<ItemRecipe> suggestions;
     private List<Event> events;
     private List<CustomRecipe> customRecipes;
-    private boolean ofTheDay, isFragmentFavourites, firstTimeInActivity;
+    private boolean ofTheDay, isFragmentFavourites, isTwoPane;
     private Chef chef;
 
     @Override
@@ -98,6 +98,10 @@ public class ActivityDrawer extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         ButterKnife.bind(this);
+        isTwoPane = DetectTabletUtils.isTablet(this);
+        ToastUtils.showToast(this, "Is two pane?: " + isTwoPane);
+
+        initMemberFields();
         setSupportActionBar(mToolbar);
         setRecyclerView();
         setDrawerToggle();
@@ -105,9 +109,17 @@ public class ActivityDrawer extends AppCompatActivity
         hasStoragePermission();
         initLetsCookReceiver();
         initProgressDialog();
-        mToolbar.setNavigationIcon(android.R.drawable.star_big_on); // this changes the burguer
+        mToolbar.setNavigationIcon(R.drawable.ic_chicken_burger); // this changes the burguer
 
-        chef = getIntent().getParcelableExtra(Constants.EXTRA_CHEF);
+        mDrawerFragments = getDrawerFragments(); //drawer fragments
+        mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
+
+        displayFragment(FragmentHome.newInstance(), getResources().getString(R.string.fragment_home));
+
+    }
+
+    private void initMemberFields() {
+        chef = getIntent().getParcelableExtra(Constants.EXTRA_CHEF); // TODO are we doing something with the user?¿
         Log.i(TAG, "onCreate: Chef data from splash activity" + getIntent().getParcelableExtra(Constants.EXTRA_CHEF));
         events = getIntent().getParcelableArrayListExtra(Constants.EXTRA_EVENTS);
         Log.i(TAG, "onCreate: retrieving events from splash activity " + events.size());
@@ -115,15 +127,6 @@ public class ActivityDrawer extends AppCompatActivity
         Log.i(TAG, "onCreate: retrieving recipes sqlite (favs) from splash activity " + recipesSQLite.size());
         customRecipes = getIntent().getParcelableArrayListExtra(Constants.EXTRA_CUSTOM_RECIPES);
         Log.i(TAG, "onCreate: retrieving custom recipes from splash activity " + customRecipes.size());
-
-        mDrawerFragments = getDrawerFragments(); //drawer fragments
-        mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
-
-        displayFragment(FragmentHome.newInstance(), getResources().getString(R.string.fragment_home));
-        SharedPreferences sp = getSharedPreferences(Constants.ACTIVITY_FIRST_TIME, MODE_PRIVATE);
-
-        firstTimeInActivity = true;
-
     }
 
     private void loadSuggestionRecipes() {
@@ -168,7 +171,7 @@ public class ActivityDrawer extends AppCompatActivity
     }
 
     /**
-     * Init the RecyclerView
+     * Init the Navigation's Drawer RecyclerView
      * Set the Adapter
      */
     private void setRecyclerView() {
@@ -176,7 +179,7 @@ public class ActivityDrawer extends AppCompatActivity
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
         List<Item> menuItems = generateDrawerItems();
-        AdapterDrawer mAdapterDrawer = new AdapterDrawer(this, menuItems);
+        AdapterDrawer mAdapterDrawer = new AdapterDrawer(this, menuItems, chef);
         mRecyclerView.setAdapter(mAdapterDrawer);
     }
 
@@ -233,32 +236,51 @@ public class ActivityDrawer extends AppCompatActivity
      * Position points to a fragment to display
      * @param view
      * @param position
-     * @param adapterId
      */
     @Override
-    public void onItemClick(View view, int position, int adapterId) {
+    public void onItemClick(View view, int position) {
         Log.i("DrawerActivity", "onItemClick: " + position);
-        if (adapterId == Constants.ADAPTER_DRAWER_ID) { //display fragment from drawer
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-            if (position == Constants.FRAGMENT_ADD_RECIPE_POSITION) { // before display add recipe fragment display dialog to get title
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        switch (position) {
+            case Constants.FRAGMENT_ADD_RECIPE_POSITION :
                 LetsCookApp.getInstance().trackEvent(AnalyticsConstants.EVENT_ADD_RECIPE,
                         AnalyticsConstants.ACTION_SCREEN, AnalyticsConstants.ADD_RECIPE_LABEL);
                 DialogFragmentRecipeTitle.newInstance().show(
                         getSupportFragmentManager(),
                         getResources().getString(R.string.fragment_add_recipe));
-            } else if (position == Constants.FRAGMENT_RECIPE_PAGER_POSITION) {
+                break;
+            case Constants.FRAGMENT_RECIPE_PAGER_POSITION :
                 if (NetworkUtils.isConnectionAvailable(this)) {
                     loadSuggestionRecipes();
                 }
                 progressDialog.show();
-            } else if (position == Constants.FRAGMENT_FAVOURITES_POSITION) {
+                break;
+            case Constants.FRAGMENT_FAVOURITES_POSITION :
                 displayFragment(mDrawerFragments.get(position), mFragmentTags[position - 1]);
                 isFragmentFavourites = true;
-            } else {
+                break;
+            case Constants.FRAGMENT_HEADER_POSITION :
+                Log.i(TAG, "onItemClick: header click");
+//                displayFragment(FragmentHeader.newInstance(), getResources().getString(R.string.fragment_header));
+                break;
+            case Constants.FRAGMENT_EVENTS_POSITION :
+                Log.i(TAG, "onItemClick: event fragment is calling");
+                if (!isTwoPane) {
+                    displayFragment(mDrawerFragments.get(position), mFragmentTags[position - 1]);
+                } else {
+                    displayFragmentInDualMode(
+                            FragmentEvents.newInstance(events),
+                            getResources().getString(R.string.fragment_events),
+                            FragmentAddEvent.newInstance(),
+                            getResources().getString(R.string.fragment_add_event)
+                    );
+                }
+                break;
+            default :
                 Log.i(TAG, "onItemClick: show fragment: " + mDrawerFragments.get(position).toString() + " tag: " + mFragmentTags[position - 1]);
                 displayFragment(mDrawerFragments.get(position), mFragmentTags[position - 1]);
-            }
         }
+
     }
 
     /**
@@ -288,6 +310,19 @@ public class ActivityDrawer extends AppCompatActivity
         fm.beginTransaction().replace(R.id.container, currentFragment, currentFragmentTag).addToBackStack(currentFragmentTag).commit();
     }
 
+    private void displayDetailFragmentPanelTwo(Fragment currentFragment, String currentFragmentTag) {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.container_detail, currentFragment, currentFragmentTag).addToBackStack(currentFragmentTag).commit();
+    }
+
+
+
+    private void displayFragmentInDualMode(Fragment main, String mainTag, Fragment detail, String detailTag) {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.container, main, mainTag).addToBackStack(mainTag).commit();
+        fm.beginTransaction().replace(R.id.container_detail, detail, detailTag).addToBackStack(detailTag).commit();
+    }
+
     /**
      * Handle click event of Logout in Navigation Drawer
      * @param view
@@ -296,6 +331,7 @@ public class ActivityDrawer extends AppCompatActivity
     protected void onLogoutClick(View view) {
         Log.i("DrawerActivity", "logout clicked: ");
         // TODO do logout
+      finish();
     }
 
     /**
@@ -305,8 +341,17 @@ public class ActivityDrawer extends AppCompatActivity
      * @param category
      */
     @Override
-    public void showRecipes(String title, String category) {
-        displayFragment(FragmentAddRecipe.newInstance(title, category), getResources().getString(R.string.fragment_add_recipe));
+    public void launchAddRecipeFragment(String title, String category) {
+        if (!isTwoPane) {
+            displayFragment(FragmentAddRecipe.newInstance(title, category), getResources().getString(R.string.fragment_add_recipe));
+        } else {
+            displayFragmentInDualMode(
+                    FragmentAddRecipe.newInstance(title, category),
+                    getResources().getString(R.string.fragment_add_recipe),
+                    FragmentCustomRecipes.newInstance(ModelConverter.convertCustomRecipeToItemRecipe(customRecipes)),
+                    getResources().getString(R.string.fragment_custom_recipes)
+            );
+        }
     }
 
     /**
@@ -326,24 +371,25 @@ public class ActivityDrawer extends AppCompatActivity
                 break;
             case Constants.ADAPTER_SUGGESTIONS_ID :
                 if (category.equals(suggestionsOfTheDay.get(position - 1).getLabel())) { //is suggestion, is its a recipe--> detail
-                    displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
-                            getResources().getString(R.string.fragment_recipes_detail));
+                    if (!isTwoPane) {
+                        displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
+                                getResources().getString(R.string.fragment_recipes_detail));
+                    } else {
+                        displayDetailFragmentPanelTwo(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
+                                getResources().getString(R.string.fragment_recipes_detail));
+                    }
                 }
                 break;
             case Constants.ADAPTER_CUSTOM_RECIPES_ID :
-                displayFragment(FragmentCustomRecipeDetail.newInstance(customRecipes.get(position - 1)),
-                        getResources().getString(R.string.fragment_custom_recipe_detail));
+                if (!isTwoPane) {
+                    displayFragment(FragmentCustomRecipeDetail.newInstance(customRecipes.get(position - 1)),
+                            getResources().getString(R.string.fragment_custom_recipe_detail));
+                } else {
+                    displayDetailFragmentPanelTwo(FragmentCustomRecipeDetail.newInstance(customRecipes.get(position - 1)),
+                            getResources().getString(R.string.fragment_custom_recipe_detail));
+                }
                 break;
         }
-//        if () {
-//            Log.i("MAIN", "onItemClick: adapter categories  " + String.valueOf(position));
-//            downloadRecipesByCategory(category);
-//            progressDialog.setMessage("Loading recipes");
-//            progressDialog.show();
-//        } else if (category.equals(suggestionsOfTheDay.get(position - 1).getLabel())) { //is suggestion, is its a recipe--> detail
-//            displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
-//                    getResources().getString(R.string.fragment_recipes_detail));
-//        }
 
     }
 
@@ -430,27 +476,11 @@ public class ActivityDrawer extends AppCompatActivity
         fragmentRecipeDetail.setRowId(rowId);
     }
 
-//    @Override
-//    public void recipesLoaded(List<RecipeLocal> recipes) {
-//        recipesSQLite = recipes;
-//        FragmentRecipes fragmentRecipes = (FragmentRecipes) getSupportFragmentManager()
-//                .findFragmentByTag(getResources().getString(R.string.fragment_recipes));
-//        fragmentRecipes.setRecipes(ModelConverter.convertLocalRecipeToItemRecipe(recipesSQLite));
-//        fragmentRecipes.updateRecipes();
-//        fragmentRecipes.stopSwipeRefresh();
-//    }
 
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-//        if (firstTimeInActivity) {
-//            finish();
-//            firstTimeInActivity = false;
-//        } else if (getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_home)).isVisible()) {
-//            finish();
-//        }
     }
 
     /**
@@ -465,8 +495,13 @@ public class ActivityDrawer extends AppCompatActivity
                     Log.i(TAG, "onReceive: ACTION_DOWNLOAD_RECIPES_BY_CATEGORY_SUCCESS ");
                     ofTheDay = false;
                     recipes = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES);
-                    displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes),false),
-                            getResources().getString(R.string.fragment_recipes));
+                    if (!isTwoPane) {
+                        displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes), false),
+                                getResources().getString(R.string.fragment_recipes));
+                    } else {
+                        displayDetailFragmentPanelTwo(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes), false),
+                                getResources().getString(R.string.fragment_recipes));
+                    }
                     // TODO start activity do show list of recipes
                     break;
                 case ActionConstants.ACTION_DOWNLOAD_RECIPES_RANDOM_SUCCESS :
@@ -474,11 +509,6 @@ public class ActivityDrawer extends AppCompatActivity
                     ofTheDay = true;
                     ToastUtils.showToast(ActivityDrawer.this, Constants.CHECK_RANDOM_RECIPES);
                     suggestionsOfTheDay = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM);
-                    // FAKE LIST FOR TEST
-//                    List<ItemRecipe> test = new ArrayList<>(1);
-//                    for (int i = 0; i < 10; i++) {
-//                        test.add(new ItemRecipe("dfdsdfsdfsd", "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg"));
-//                    }
                     displayFragment(FragmentRecipesViewer.newInstance(
                             ModelConverter.convertLocalRecipeToItemRecipe(suggestionsOfTheDay),
                             ModelConverter.convertCustomRecipeToItemRecipe(customRecipes)
@@ -517,6 +547,11 @@ public class ActivityDrawer extends AppCompatActivity
                             .findFragmentByTag(getResources().getString(R.string.fragment_recipes_viewer));
                     if (fragmentRecipesViewer != null) {
                         fragmentRecipesViewer.updateCustomRecipesInFragment(customRecipes);
+                    }
+                    if (isTwoPane) {
+                        FragmentCustomRecipes fragmentCustomRecipes = (FragmentCustomRecipes) getSupportFragmentManager()
+                                .findFragmentByTag(getResources().getString(R.string.fragment_custom_recipes));
+                        fragmentCustomRecipes.updateSuggestions(ModelConverter.convertCustomRecipeToItemRecipe(customRecipes));
                     }
                     // TODO update list in fragment and in adapter
                     break;

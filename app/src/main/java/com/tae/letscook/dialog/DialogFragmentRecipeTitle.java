@@ -3,16 +3,11 @@ package com.tae.letscook.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -63,7 +58,7 @@ public class DialogFragmentRecipeTitle extends DialogFragment {
                 if (etTitle.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
                 } else {
-                    titleListener.showRecipes(etTitle.getText().toString(), category);
+                    titleListener.launchAddRecipeFragment(etTitle.getText().toString(), category);
                 }
             }
         });

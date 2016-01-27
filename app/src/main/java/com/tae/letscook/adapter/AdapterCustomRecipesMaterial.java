@@ -89,11 +89,14 @@ public class AdapterCustomRecipesMaterial extends RecyclerView.Adapter<AdapterCu
 
     public void updateSuggestions(List<ItemRecipe> itemRecipes) {
         Log.i("Suggestion Adapter", "updateSuggestions: list updated");
-        this.itemRecipes = itemRecipes;
-        for (ItemRecipe item : itemRecipes) {
-            this.itemRecipes.add(item);
-            notifyDataSetChanged();
-        }
+//        this.itemRecipes = itemRecipes;
+//        for (ItemRecipe item : itemRecipes) {
+//            this.itemRecipes.add(item);
+//            notifyDataSetChanged();
+//        }
+        this.itemRecipes.clear();
+        this.itemRecipes.addAll(itemRecipes);
+        this.notifyDataSetChanged();
     }
 
 //    private void generateColorLabelsInCards(final ViewHolder holder, int position) {

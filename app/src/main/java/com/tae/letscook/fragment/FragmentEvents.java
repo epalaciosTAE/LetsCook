@@ -3,6 +3,7 @@ package com.tae.letscook.fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tae.letscook.R;
+import com.tae.letscook.Utils.DetectTabletUtils;
 import com.tae.letscook.adapter.AdapterEvents;
 import com.tae.letscook.app.LetsCookApp;
 import com.tae.letscook.constants.Constants;
@@ -35,6 +37,7 @@ import butterknife.OnClick;
 public class FragmentEvents extends Fragment {
 
     @Bind(R.id.recycler_view) protected RecyclerView recyclerView;
+    @Bind(R.id.fab_add_event) protected FloatingActionButton fabAddEvent;
     private List<Event> events;
     private AdapterEvents adapterEvents;
 
@@ -67,9 +70,13 @@ public class FragmentEvents extends Fragment {
 
     @OnClick(R.id.fab_add_event)
     protected void onClick(View view) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.container, FragmentAddEvent.newInstance(), getResources().getString(R.string.fragment_add_event))
-                .addToBackStack(getResources().getString(R.string.fragment_add_event)).commit();
+        if (!DetectTabletUtils.isTablet(getActivity())) {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.container, FragmentAddEvent.newInstance(), getResources().getString(R.string.fragment_add_event))
+                    .addToBackStack(getResources().getString(R.string.fragment_add_event)).commit();
+        } else {
+            fabAddEvent.setVisibility(View.GONE);
+        }
 
     }
 

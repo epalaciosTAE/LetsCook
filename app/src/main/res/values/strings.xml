@@ -82,5 +82,6 @@
     <string name="home">Show me the money!!</string>
     <string name="recipe_detail">Nutrients</string>
     <string name="recipes_pager_viewer_header">Hungry? \n Check a recipe and lets cook!!</string>
+    <string name="fragment_header">FragmentHeader</string>
 
 </resources>
