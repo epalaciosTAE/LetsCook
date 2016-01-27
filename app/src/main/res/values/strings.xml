@@ -73,5 +73,14 @@
     <string name="et_hint_event_title">Event title</string>
     <string name="et_hint_event_address">Address</string>
     <string name="event_enter_address">Please enter an address</string>
+    <string name="add_recipe_category">Category</string>
+    <string name="add_event_title">Add Event</string>
+    <string name="add_event_date">Date</string>
+    <string name="add_event_select_date">Select a date</string>
+    <string name="add_event_create">Create event</string>
+    <string name="add_recipe_create">Create Recipe</string>
+    <string name="home">Show me the money!!</string>
+    <string name="recipe_detail">Nutrients</string>
+    <string name="recipes_pager_viewer_header">Hungry? \n Check a recipe and lets cook!!</string>
 
 </resources>

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -89,7 +90,7 @@ public class ActivityDrawer extends AppCompatActivity
     private List<ItemRecipe> suggestions;
     private List<Event> events;
     private List<CustomRecipe> customRecipes;
-    private boolean ofTheDay, isFragmentFavourites;
+    private boolean ofTheDay, isFragmentFavourites, firstTimeInActivity;
     private Chef chef;
 
     @Override
@@ -119,6 +120,9 @@ public class ActivityDrawer extends AppCompatActivity
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
         displayFragment(FragmentHome.newInstance(), getResources().getString(R.string.fragment_home));
+        SharedPreferences sp = getSharedPreferences(Constants.ACTIVITY_FIRST_TIME, MODE_PRIVATE);
+
+        firstTimeInActivity = true;
 
     }
 
@@ -440,10 +444,13 @@ public class ActivityDrawer extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        int fragmentcount = getSupportFragmentManager().getBackStackEntryCount();
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_home));
+//        int fragmentcount = getSupportFragmentManager().getBackStackEntryCount();
+//        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_home));
 
-        if (fragment != null) {
+        if (firstTimeInActivity) {
+            finish();
+            firstTimeInActivity = false;
+        } else if (getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_home)) != null) {
             finish();
         }
     }

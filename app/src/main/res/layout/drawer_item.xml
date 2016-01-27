@@ -22,8 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="14sp"
-        android:text="Medium Text" />
+        android:textSize="14sp" />
 
 
 </LinearLayout>
