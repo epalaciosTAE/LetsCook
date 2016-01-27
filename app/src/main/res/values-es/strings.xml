@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LetsCook</string>
+    <string name="nav_logout">Logout</string>
+
+
+
+    <string name="et_hint_recipe_title">Da nombre a tu receta</string>
+    <!--<string name="dialog_add_recipe_title">Add a title for the recipe</string>-->
+
+    <!--<string name="spinner_category">Choose Category</string>-->
+    <string name="spinner_level">Elige nivel</string>
+    <string name="spinner_dinner_guest">Elige invitados</string>
+    <string name="spinner_time">Elige tiempo</string>
+    <string name="spinner_budget">Elige presupuesto</string>
+
+
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="tv_add_image">Añade imagen</string>
+    <string name="tv_add_ingredients">Ingredientes</string>
+    <string name="et_hint_ingredient_name">Ingrediente</string>
+    <string name="et_hint_ingredient_amount">Cantidad</string>
+    <string name="dialog_add">Añade</string>
+    <string name="tv_add_ingredients_amount">Cantidad</string>
+    <string name="menu_camera">Saca una foto</string>
+    <string name="recipes_of_the_day">Recetas del dia</string>
+    <string name="add_recipe_create">Crear receta</string>
+    <string name="home">Enseñame la pasta!!</string>
+    <string name="recipe_detail">Valor nutricional</string>
+    <string name="recipes_pager_viewer_header">¿Hambriento? \n Mira alguna receta y… lets cook!!</string>
+
+
+    <!-- Google Sign In-->
+    <string name="desc_google_icon">Google Logo</string>
+    <string name="google_sign_in">Logate con Google</string>
+    <string name="signed_out">Signed out</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="disconnect">Desconectar</string>
+
+
+    <string name="add_recipe_category">Categoria</string>
+    <!-- Sign-in status messages -->
+    <string name="signed_in_fmt">Logado como: %s</string>
+    <string name="auth_code_fmt">Auth Code: %s</string>
+    <string name="loading">Cargando…</string>
+    <string name="login">Login</string>
+    <string name="facebook_sign_in">Logate con Facebook</string>
+    <string name="facebook_id">id</string>
+    <string name="facebook_name">nombre</string>
+    <string name="facebook_email">email</string>
+    <string name="facebook_picture">imagen</string>
+    <string name="et_hint_event_title">Titulo del evento</string>
+    <string name="et_hint_event_address">Dirección</string>
+    <string name="event_enter_address">Añade una direccion valida</string>
+    <string name="add_event_title">Añade un evento</string>
+    <string name="add_event_date">Fecha</string>
+    <string name="add_event_select_date">Selecciona una fecha</string>
+    <string name="add_event_create">Crear evento</string>
+
+</resources>
