@@ -43,6 +43,7 @@ import com.tae.letscook.fragment.FragmentAddRecipe;
 import com.tae.letscook.fragment.FragmentCustomRecipeDetail;
 import com.tae.letscook.fragment.FragmentCustomRecipes;
 import com.tae.letscook.fragment.FragmentEvents;
+import com.tae.letscook.fragment.FragmentHome;
 import com.tae.letscook.fragment.FragmentNutrients;
 import com.tae.letscook.fragment.FragmentOtherChefs;
 import com.tae.letscook.fragment.FragmentRecipeDetail;
@@ -116,6 +117,8 @@ public class ActivityDrawer extends AppCompatActivity
 
         mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
+
+        displayFragment(FragmentHome.newInstance(), getResources().getString(R.string.fragment_home));
 
     }
 
@@ -433,6 +436,18 @@ public class ActivityDrawer extends AppCompatActivity
 //        fragmentRecipes.stopSwipeRefresh();
 //    }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        int fragmentcount = getSupportFragmentManager().getBackStackEntryCount();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_home));
+
+        if (fragment != null) {
+            finish();
+        }
+    }
+
     /**
      * Inner class to handle broadcast receivers (take it out if possible)
      */
@@ -518,4 +533,6 @@ public class ActivityDrawer extends AppCompatActivity
 
 
     }
+
+
 }
