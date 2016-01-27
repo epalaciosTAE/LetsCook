@@ -444,15 +444,13 @@ public class ActivityDrawer extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        int fragmentcount = getSupportFragmentManager().getBackStackEntryCount();
-//        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_home));
 
-        if (firstTimeInActivity) {
-            finish();
-            firstTimeInActivity = false;
-        } else if (getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_home)) != null) {
-            finish();
-        }
+//        if (firstTimeInActivity) {
+//            finish();
+//            firstTimeInActivity = false;
+//        } else if (getSupportFragmentManager().findFragmentByTag(getResources().getString(R.string.fragment_home)).isVisible()) {
+//            finish();
+//        }
     }
 
     /**
