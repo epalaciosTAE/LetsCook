@@ -52,6 +52,7 @@ public class FragmentEvents extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         LetsCookApp.getInstance().trackScreenView(getResources().getString(R.string.fragment_events));
         events = (List<Event>) getArguments().get(Constants.EXTRA_EVENTS);
     }
@@ -65,19 +66,18 @@ public class FragmentEvents extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         adapterEvents = new AdapterEvents(getActivity(), events);
         recyclerView.setAdapter(adapterEvents);
+        if (DetectTabletUtils.isTablet(getActivity())) {
+            fabAddEvent.setVisibility(View.GONE);
+        }
         return view;
     }
 
     @OnClick(R.id.fab_add_event)
     protected void onClick(View view) {
-        if (!DetectTabletUtils.isTablet(getActivity())) {
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.container, FragmentAddEvent.newInstance(), getResources().getString(R.string.fragment_add_event))
-                    .addToBackStack(getResources().getString(R.string.fragment_add_event)).commit();
-        } else {
-            fabAddEvent.setVisibility(View.GONE);
-        }
-
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.container, FragmentAddEvent.newInstance(),
+                getResources().getString(R.string.fragment_add_event))
+                .addToBackStack(getResources().getString(R.string.fragment_add_event)).commit();
     }
 
     public void updateEvents(Event event) {

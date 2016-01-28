@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -92,12 +93,15 @@ public class ActivityDrawer extends AppCompatActivity
     private List<CustomRecipe> customRecipes;
     private boolean ofTheDay, isFragmentFavourites, isTwoPane;
     private Chef chef;
+    private Fragment currentFragment;
+    private String currentTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         ButterKnife.bind(this);
+
         isTwoPane = DetectTabletUtils.isTablet(this);
         ToastUtils.showToast(this, "Is two pane?: " + isTwoPane);
 
@@ -114,8 +118,25 @@ public class ActivityDrawer extends AppCompatActivity
         mDrawerFragments = getDrawerFragments(); //drawer fragments
         mFragmentTags = getResources().getStringArray(R.array.nav_drawer_fragment_tags);
 
-        displayFragment(FragmentHome.newInstance(), getResources().getString(R.string.fragment_home));
 
+        if (savedInstanceState != null) {
+            currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, Constants.ROTATION_CURRENT_FRAGMENT);
+            currentTag = (String) savedInstanceState.get(Constants.ROTATION_CURRENT_FRAGMENT_TAG);
+            displayFragment(currentFragment, currentTag);
+        } else {
+            setCurrentFragment(FragmentHome.newInstance());
+            setCurrentTag(getResources().getString(R.string.fragment_home));
+            displayFragment(currentFragment,currentTag);
+        }
+
+    }
+
+    private void setCurrentTag(String fragmentTag) {
+        currentTag = fragmentTag;
+    }
+
+    private void setCurrentFragment(Fragment fragment) {
+        currentFragment = fragment;
     }
 
     private void initMemberFields() {
@@ -256,7 +277,9 @@ public class ActivityDrawer extends AppCompatActivity
                 progressDialog.show();
                 break;
             case Constants.FRAGMENT_FAVOURITES_POSITION :
-                displayFragment(mDrawerFragments.get(position), mFragmentTags[position - 1]);
+                setCurrentFragment(mDrawerFragments.get(position));
+                setCurrentTag(mFragmentTags[position - 1]);
+                displayFragment(currentFragment, currentTag);
                 isFragmentFavourites = true;
                 break;
             case Constants.FRAGMENT_HEADER_POSITION :
@@ -266,19 +289,29 @@ public class ActivityDrawer extends AppCompatActivity
             case Constants.FRAGMENT_EVENTS_POSITION :
                 Log.i(TAG, "onItemClick: event fragment is calling");
                 if (!isTwoPane) {
-                    displayFragment(mDrawerFragments.get(position), mFragmentTags[position - 1]);
+                    setCurrentFragment(mDrawerFragments.get(position));
+                    setCurrentTag(mFragmentTags[position - 1]);
+                    displayFragment(currentFragment, currentTag);
+                } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    setCurrentFragment(mDrawerFragments.get(position));
+                    setCurrentTag(mFragmentTags[position - 1]);
+                    displayFragment(currentFragment, currentTag);
                 } else {
+                    setCurrentFragment(FragmentAddEvent.newInstance());
+                    setCurrentTag(getResources().getString(R.string.fragment_add_event));
                     displayFragmentInDualMode(
                             FragmentEvents.newInstance(events),
                             getResources().getString(R.string.fragment_events),
-                            FragmentAddEvent.newInstance(),
-                            getResources().getString(R.string.fragment_add_event)
+                            currentFragment,
+                            currentTag
                     );
                 }
                 break;
             default :
                 Log.i(TAG, "onItemClick: show fragment: " + mDrawerFragments.get(position).toString() + " tag: " + mFragmentTags[position - 1]);
-                displayFragment(mDrawerFragments.get(position), mFragmentTags[position - 1]);
+                setCurrentFragment(mDrawerFragments.get(position));
+                setCurrentTag(mFragmentTags[position - 1]);
+                displayFragment(currentFragment, currentTag);
         }
 
     }
@@ -343,13 +376,17 @@ public class ActivityDrawer extends AppCompatActivity
     @Override
     public void launchAddRecipeFragment(String title, String category) {
         if (!isTwoPane) {
-            displayFragment(FragmentAddRecipe.newInstance(title, category), getResources().getString(R.string.fragment_add_recipe));
+            setCurrentFragment(FragmentAddRecipe.newInstance(title, category));
+            setCurrentTag(getResources().getString(R.string.fragment_add_recipe));
+            displayFragment(currentFragment, currentTag);
         } else {
+            setCurrentFragment(FragmentCustomRecipes.newInstance(ModelConverter.convertCustomRecipeToItemRecipe(customRecipes)));
+            setCurrentTag(getResources().getString(R.string.fragment_custom_recipes));
             displayFragmentInDualMode(
                     FragmentAddRecipe.newInstance(title, category),
                     getResources().getString(R.string.fragment_add_recipe),
-                    FragmentCustomRecipes.newInstance(ModelConverter.convertCustomRecipeToItemRecipe(customRecipes)),
-                    getResources().getString(R.string.fragment_custom_recipes)
+                    currentFragment,
+                    currentTag
             );
         }
     }
@@ -372,8 +409,9 @@ public class ActivityDrawer extends AppCompatActivity
             case Constants.ADAPTER_SUGGESTIONS_ID :
                 if (category.equals(suggestionsOfTheDay.get(position - 1).getLabel())) { //is suggestion, is its a recipe--> detail
                     if (!isTwoPane) {
-                        displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
-                                getResources().getString(R.string.fragment_recipes_detail));
+                        setCurrentFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER));
+                        setCurrentTag(getResources().getString(R.string.fragment_recipes_detail));
+                        displayFragment(currentFragment , currentTag);
                     } else {
                         displayDetailFragmentPanelTwo(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position - 1), Constants.FRAGMENT_PAGER),
                                 getResources().getString(R.string.fragment_recipes_detail));
@@ -382,8 +420,10 @@ public class ActivityDrawer extends AppCompatActivity
                 break;
             case Constants.ADAPTER_CUSTOM_RECIPES_ID :
                 if (!isTwoPane) {
-                    displayFragment(FragmentCustomRecipeDetail.newInstance(customRecipes.get(position - 1)),
-                            getResources().getString(R.string.fragment_custom_recipe_detail));
+                    setCurrentFragment(FragmentCustomRecipeDetail.newInstance(customRecipes.get(position - 1)));
+                    setCurrentTag(getResources().getString(R.string.fragment_custom_recipe_detail));
+                    displayFragment(currentFragment,
+                            currentTag);
                 } else {
                     displayDetailFragmentPanelTwo(FragmentCustomRecipeDetail.newInstance(customRecipes.get(position - 1)),
                             getResources().getString(R.string.fragment_custom_recipe_detail));
@@ -445,19 +485,26 @@ public class ActivityDrawer extends AppCompatActivity
     public void onItemClick(int position) {
         Log.i(TAG, "onItemClick: position " + position);
         if (ofTheDay) {
-            displayFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position),Constants.FRAGMENT_PAGER),getString(R.string.fragment_recipes_detail));
+            setCurrentFragment(FragmentRecipeDetail.newInstance(suggestionsOfTheDay.get(position),Constants.FRAGMENT_PAGER));
+            setCurrentTag(getString(R.string.fragment_recipes_detail));
+            displayFragment(currentFragment, currentTag);
         } else if (isFragmentFavourites) {
-            displayFragment(FragmentRecipeDetail.newInstance(recipesSQLite.get(position), Constants.FRAGMENT_FAVOURITES), getString(R.string.fragment_recipes_detail));
+            setCurrentFragment(FragmentRecipeDetail.newInstance(recipesSQLite.get(position), Constants.FRAGMENT_FAVOURITES));
+            setCurrentTag(getString(R.string.fragment_recipes_detail));
+            displayFragment(currentFragment, currentTag);
         } else {
-            displayFragment(FragmentRecipeDetail.newInstance(recipes.get(position), Constants.FRAGMENT_PAGER), getString(R.string.fragment_recipes_detail));
+            setCurrentFragment(FragmentRecipeDetail.newInstance(recipes.get(position), Constants.FRAGMENT_PAGER));
+            setCurrentTag(getString(R.string.fragment_recipes_detail));
+            displayFragment(currentFragment, currentTag);
         }
     }
 
     @Override
     public void displayFragmentNutrients(RecipeLocal recipe) {
-        displayFragment(FragmentNutrients.newInstance(
-                        (ArrayList<NutrientLocal>) recipe.getNutrients()),
-                getString(R.string.fragment_nutrients));
+        setCurrentFragment(FragmentNutrients.newInstance(
+                (ArrayList<NutrientLocal>) recipe.getNutrients()));
+        setCurrentTag(getString(R.string.fragment_nutrients));
+        displayFragment(currentFragment, currentTag);
     }
 
     public List<ItemRecipe>  getSuggestionRecipes() {
@@ -474,6 +521,13 @@ public class ActivityDrawer extends AppCompatActivity
         FragmentRecipeDetail fragmentRecipeDetail = (FragmentRecipeDetail) getSupportFragmentManager()
                 .findFragmentByTag(getResources().getString(R.string.fragment_recipes_detail));
         fragmentRecipeDetail.setRowId(rowId);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Constants.ROTATION_CURRENT_FRAGMENT_TAG, currentTag);
+        getSupportFragmentManager().putFragment(outState, Constants.ROTATION_CURRENT_FRAGMENT, currentFragment);
     }
 
 
@@ -496,8 +550,9 @@ public class ActivityDrawer extends AppCompatActivity
                     ofTheDay = false;
                     recipes = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES);
                     if (!isTwoPane) {
-                        displayFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes), false),
-                                getResources().getString(R.string.fragment_recipes));
+                        setCurrentFragment(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes), false));
+                        setCurrentTag(getResources().getString(R.string.fragment_recipes));
+                        displayFragment(currentFragment, currentTag);
                     } else {
                         displayDetailFragmentPanelTwo(FragmentRecipes.newInstance(ModelConverter.convertLocalRecipeToItemRecipe(recipes), false),
                                 getResources().getString(R.string.fragment_recipes));
@@ -509,10 +564,11 @@ public class ActivityDrawer extends AppCompatActivity
                     ofTheDay = true;
                     ToastUtils.showToast(ActivityDrawer.this, Constants.CHECK_RANDOM_RECIPES);
                     suggestionsOfTheDay = intent.getParcelableArrayListExtra(Constants.EXTRA_RECIPES_RANDOM);
-                    displayFragment(FragmentRecipesViewer.newInstance(
+                    setCurrentFragment(FragmentRecipesViewer.newInstance(
                             ModelConverter.convertLocalRecipeToItemRecipe(suggestionsOfTheDay),
-                            ModelConverter.convertCustomRecipeToItemRecipe(customRecipes)
-                    ), mFragmentTags[0]);
+                            ModelConverter.convertCustomRecipeToItemRecipe(customRecipes)));
+                    setCurrentTag(mFragmentTags[0]);
+                    displayFragment(currentFragment, currentTag);
                     break;
                 case ActionConstants.ACTION_UPDATE_SQLITE_RECIPES :
                     recipesSQLite = intent.getParcelableArrayListExtra(Constants.EXTRA_SQLITE_RECIPES);

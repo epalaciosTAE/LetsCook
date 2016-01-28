@@ -82,6 +82,7 @@ public class FragmentAddRecipe extends Fragment implements OnIngredientAddedList
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         getActivity().setTitle(getActivity().getString(R.string.fragment_add_recipe_title));
         title = getTitleRecipe();
         category = getCategoryRecipe();

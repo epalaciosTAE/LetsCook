@@ -85,6 +85,8 @@ public class Constants {
     public static final String ACTIVITY_FIRST_TIME = "activity_first_time";
     public static final String SHARE_PREFS_FIRST_TIME_ACTIVITY = "sp_activity_first_time";
     public static final int FRAGMENT_HEADER_POSITION = 0;
+    public static final String ROTATION_CURRENT_FRAGMENT = "rotation_current_fragment_state";
+    public static final String ROTATION_CURRENT_FRAGMENT_TAG = "rotation_current_fragment_tag_state";
 
 
 //    "http://s1.1zoom.net/big3/862/340361-svetik.jpg"
