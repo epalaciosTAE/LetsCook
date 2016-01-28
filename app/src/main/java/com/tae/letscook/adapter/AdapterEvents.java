@@ -36,7 +36,8 @@ public class AdapterEvents extends RecyclerView.Adapter<AdapterEvents.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.title.setText(events.get(position).getUserName());
+        holder.title.setText(events.get(position).getTitle());
+        holder.userName.setText(events.get(position).getUserName());
         holder.address.setText(events.get(position).getAddress());
         holder.date.setText(events.get(position).getDate());
     }
@@ -54,6 +55,7 @@ public class AdapterEvents extends RecyclerView.Adapter<AdapterEvents.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
         @Bind(R.id.tv_event_title) protected TextView title;
+        @Bind(R.id.tv_event_user_name) protected TextView userName;
         @Bind(R.id.tv_event_address) protected TextView address;
         @Bind(R.id.tv_event_date) protected TextView date;
 

@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import com.tae.letscook.Utils.DrawableUtils;
 import com.tae.letscook.R;
 import com.tae.letscook.listeners.OnItemClickListener;
+import com.tae.letscook.model.Chef;
 import com.tae.letscook.model.Item;
 
 import java.util.List;
@@ -26,12 +27,14 @@ public class AdapterDrawer extends RecyclerView.Adapter<AdapterDrawer.ViewHolder
 
     private List<Item> items;
     private Context context;
+    private Chef chef;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
-    public AdapterDrawer(Context context, List<Item> items) {
+    public AdapterDrawer(Context context, List<Item> items, Chef chef) {
         this.context = context;
         this.items = items;
+        this.chef = chef;
     }
 
     @Override
@@ -50,10 +53,12 @@ public class AdapterDrawer extends RecyclerView.Adapter<AdapterDrawer.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (holder.type == TYPE_ITEM) {
             holder.tvItemDrawer.setText(items.get(position - 1).getItem());
-            Picasso.with(context).load(items.get(position - 1).getImageId()).placeholder(android.R.drawable.star_big_on).into(holder.imgItemDrawer); // TODO add a
+            Picasso.with(context).load(items.get(position - 1).getImageId())
+                    .placeholder(android.R.drawable.star_big_on).into(holder.imgItemDrawer); // TODO add a
         } else {
-            holder.tvHeaderUser.setText("User name goes here"); // TODO Use a Chef model to set this value and the user image
-            Picasso.with(context).load(android.R.drawable.star_big_off).placeholder(android.R.drawable.star_big_on).resize(100, 100).centerCrop().into(holder.circleImgHeader); // TODO add a
+            holder.tvHeaderUser.setText(chef.getName()); // TODO Use a Chef model to set this value and the user image
+            Picasso.with(context).load(chef.getPicture()).placeholder(android.R.drawable.star_big_on)
+                    .resize(100, 100).centerCrop().into(holder.circleImgHeader); // TODO add a
         }
     }
 
@@ -97,7 +102,7 @@ public class AdapterDrawer extends RecyclerView.Adapter<AdapterDrawer.ViewHolder
 
         @Override
         public void onClick(View v) {
-            itemClickListener.onItemClick(v, getAdapterPosition(), 0);
+            itemClickListener.onItemClick(v, getAdapterPosition());
         }
     }
 }

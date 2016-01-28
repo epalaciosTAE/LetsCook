@@ -125,7 +125,7 @@ public class AdapterCategoriesMaterial extends RecyclerView.Adapter<AdapterCateg
 
         @Override
         public void onClick(View v) {
-            Log.i("Categori Adapter", "onClick: category: " +categories.get(getAdapterPosition()).getItem()
+            Log.i("Categori Adapter", "onClick: category: " +categories.get(getAdapterPosition()-1).getItem()
                     + " position " + String.valueOf(getAdapterPosition() -1));
             categoryClickListener.onCategoryItemClick(v, getAdapterPosition(), categories.get(getAdapterPosition() - 1).getItem(), Constants.ADAPTER_CATEGORIES_ID);
         }

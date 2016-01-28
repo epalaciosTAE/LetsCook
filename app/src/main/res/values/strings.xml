@@ -79,8 +79,9 @@
     <string name="add_event_select_date">Select a date</string>
     <string name="add_event_create">Create event</string>
     <string name="add_recipe_create">Create Recipe</string>
-    <string name="home">Show me the money!!</string>
+    <string name="home">DummyFragment with PayPal!!</string>
     <string name="recipe_detail">Nutrients</string>
     <string name="recipes_pager_viewer_header">Hungry? \n Check a recipe and lets cook!!</string>
+    <string name="fragment_header">FragmentHeader</string>
 
 </resources>
